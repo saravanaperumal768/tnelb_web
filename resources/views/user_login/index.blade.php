@@ -20,10 +20,13 @@
 
                 <!-- Main Content -->
                 <main class="main-content-login">
+                    @if(Auth::check())
                     <header class="header-login">
-                        <h2>Welcome Mr/Ms. xxxxxxxx</h2>
+                        <h2 class="text-capitalize">Welcome Mr/Ms. {{ Auth::user()->name }}</h2>
 
                     </header>
+
+                    @endif
 
                     <!-- Tasks and Projects Section -->
                     <section class="tasks-projects-login">
@@ -77,27 +80,45 @@
                                         <th>Applied On</th>
 
                                         <th>Status</th>
-                                        <th>Deadline</th>
+                                        <th>Download/License No</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-status="en-cours">
-                                        <td>1</td>
-                                        <td>Form W</td>
-                                        <td>20/11/2024</td>
-                                        <td><span class="btn btn-success">Accept</span></td>
+                                    @forelse($workflows as $index => $workflow)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $workflow->formname_appliedfor }}</td> <!-- Adjust column name as per DB -->
+                                        <td>{{ \Carbon\Carbon::parse($workflow->created_at)->format('d/m/Y') }}</td>
+                                        <td>
+                                            @if(!empty($workflow->payment_status))
+                                            <span class="btn btn-success">Under Process</span>
+                                            @else
+                                            <span class="btn btn-danger">Rejected</span>
+                                            @endif
+                                        </td>
 
 
-                                        <td>24/01/2025</td>
+                                  
+                                        <td>
+                                            <a href="{{ route('generate.tamil.pdf', ['login_id' => $workflow->application_id]) }}" target="_blank" class="btn btn-primary">
+                                               Tamil PDF
+                                            </a>
+
+                                            <a href="{{ route('generate.pdf', ['login_id' => $workflow->application_id]) }}" target="_blank" class="btn btn-primary">
+                                                English PDF
+                                            </a>
+                                        </td>
+
+                                        </td>
+
+
+
                                     </tr>
-                                    <tr data-status="a-faire">
-                                        <td>2</td>
-                                        <td>Form H</td>
-                                        <td>24/01/2025</td>
-                                        <td><span class="btn btn-warning text-white">Pending</span></td>
-
-                                        <td>20/02/2024</td>
+                                    @empty
+                                    <tr>
+                                        <td colspan="5">No records found</td>
                                     </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>

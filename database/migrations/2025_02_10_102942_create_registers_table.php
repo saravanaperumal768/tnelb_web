@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('registers', function (Blueprint $table) {
+        Schema::create('tnelb_registers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('gender');
@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('state');
             $table->string('district');
             $table->string('pincode', 6);
+            $table->string('login_id')->default('');
+            $table->string('password')->default('');
             $table->timestamps();
         });
     }

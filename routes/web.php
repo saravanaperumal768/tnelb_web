@@ -1,8 +1,13 @@
 <?php
 
+use App\Http\Controllers\FormController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\RegisterController;
+use Illuminate\Support\Facades\Session;
 use Sayakb\Captcha\Facades\Captcha;
 
 /*
@@ -42,13 +47,29 @@ Route::get('/complaints', [IndexController::class, 'complaints'])->name('complai
 
 Route::get('/contact', [IndexController::class, 'contact'])->name('contact');
 
-Route::get('/login', [IndexController::class, 'login'])->name('login');
 
-Route::get('/login', [RegisterController::class, 'login'])->name('login');
 
 Route::get('/register', [RegisterController::class, 'register'])->name('register');
 
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+
+Route::get('/loginpage', [RegisterController::class, 'login'])->name('loginpage');
+
+Route::get('/login', [LoginController::class, 'login'])->name('login');
+
+Route::post('/login', [LoginController::class, 'check'])->name('login.check');
+
+Route::post('/login/verify', [LoginController::class, 'verifyOtp'])->name('login.verify');
+
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+
+Route::get('/dashboard', [LoginController::class, 'dashboard'])
+    ->name('dashboard')
+    ->middleware('auth.dashboard');
+
+
+
 
 // ------------after login ------------------
 Route::get('/user_login', [RegisterController::class, 'user_login'])->name('user_login');
@@ -58,8 +79,19 @@ Route::get('/apply-form-s', [RegisterController::class, 'apply_form_s'])->name('
 Route::get('/apply-form-w', [RegisterController::class, 'apply_form_w'])->name('apply-form-w');
 
 
+// --------success-page---------------------
+
+Route::get('/successpage', [RegisterController::class, 'successpage'])->name('successpage');
 
 
 Route::get('captcha/image', function () {
     return Captcha::create();
 });
+
+// ----------------------------------------
+
+Route::post('/form/store', [FormController::class, 'store'])->name('form.store');
+Route::get('/generate-pdf/{login_id}', [PDFController::class, 'generatePDF'])->name('generate.pdf');
+Route::get('/generateTamilPDF/{login_id}', [PDFController::class, 'generateTamilPDF'])->name('generate.tamil.pdf');
+
+

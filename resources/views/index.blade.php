@@ -3,55 +3,57 @@
 
 
 <section class="banner-section mt-0">
-            <div class="swiper-container banner-slider">
-                <div class="swiper-wrapper">
-                    <!-- Slide Item -->
-                    <div class="swiper-slide" style="background-image: url(assets/images/slider/slider3.jpg);">
-                        <div class="content-outer">
-                            <div class="content-box">
-                                <div class="inner">
-                                    <h1>  Welcome to <br> 
-                                        TamilNadu Electricity Licencing Board</h1>
-                                   
-                                    <div class="link-box">
-                                        <a href="#" class="theme-btn btn-style-one"><span>Know More</span></a>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Slide Item -->
-                    <div class="swiper-slide" style="background-image: url(assets/images/slider/slider1.jpg);">
-                        <div class="content-outer">
-                            <div class="content-box">
-                                <div class="inner">
-                                    <h1>  Welcome to <br> 
-                                        TamilNadu Electricity Licencing Board</h1>
-                                   
-                                    <div class="link-box">
-                                        <a href="#" class="theme-btn btn-style-one"><span>Read More</span></a>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="banner-slider-nav">
-                <div class="banner-slider-control banner-slider-button-prev"><span><i class="icon-arrow"></i></span>
-                </div>
-                <div class="banner-slider-control banner-slider-button-next"><span><i class="icon-arrow"></i></span>
-                </div>
-            </div>
+    <div class="swiper-container banner-slider">
+        <div class="swiper-wrapper">
+            <!-- Slide Item -->
+            <div class="swiper-slide" style="background-image: url(assets/images/slider/slider3.jpg);">
+                <div class="content-outer">
+                    <div class="content-box">
+                        <div class="inner">
+                            <h1> Welcome to <br>
+                                TamilNadu Electricity Licencing Board</h1>
 
-               <!-- Stop Button -->
+                            <div class="link-box">
+                                <a href="#" class="theme-btn btn-style-one"><span>Know More</span></a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide Item -->
+            <div class="swiper-slide" style="background-image: url(assets/images/slider/slider1.jpg);">
+                <div class="content-outer">
+                    <div class="content-box">
+                        <div class="inner">
+                            <h1> Welcome to <br>
+                                TamilNadu Electricity Licencing Board</h1>
+
+                            <div class="link-box">
+                                <a href="#" class="theme-btn btn-style-one"><span>Read More</span></a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="banner-slider-nav">
+        <div class="banner-slider-control banner-slider-button-prev"><span><i class="icon-arrow"></i></span>
+        </div>
+        <div class="banner-slider-control banner-slider-button-next"><span><i class="icon-arrow"></i></span>
+        </div>
+    </div>
+
+    <!-- Stop Button -->
     <div class="stop-slider-container">
         <button class="stop-slider theme-btn btn-style-two"><i class="fa fa-pause"></i></button>
     </div>
-            
-        </section>
+
+</section>
+
+
 
 
 <!-- End Bnner Section -->
@@ -89,9 +91,100 @@
     </div>
 </section>
 
+<section class="about-section events-section">
+    <div class="auto-container">
 
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="sec-title ">
+
+
+                    <h2>About</h2>
+                </div>
+                <div class="content-block wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
+
+                    <div class="text text-dark">
+                        <p>
+
+                            <span style=" font-family: Arimo, sans-serif; font-size: 16px; text-align: left; background-color: rgb(255, 255, 255)">
+
+                            </span>
+                        </p>
+
+
+                        <div class="text" style=" margin: 0px 0px 30px; border: none; outline: none; font-size: 16px; line-height: 28px; position: relative; font-family: Arimo, sans-serif; text-align: left; background-color: rgb(255, 255, 255)">Electrical inspectorate department is a statutory creation under the Indian Electricity Act 1910 headed by the Chief Electrical Inspector to the Government of Tamilnadu, under the administrative control of the Energy Department in the Government Secretariat. The inspectorate is primarily responsible for the enforcement of the various provisions of the Indian Electricity Act 1910 and the Indian Electricity Rules 1956, in order to ensure safety to the workmen, public and the equipments. Apart from these the department is entrusted with the following statutory duties and executive functions under the following acts.</div>
+
+
+                        <ul class="list" style=" margin: 0px 0px 35px; border: none; outline: none; font-size: 16px; line-height: inherit; list-style: none; position: relative; color: rgb(34, 34, 34); font-family: Arimo, sans-serif; text-align: left; background-color: rgb(255, 255, 255)">
+                            <li style=" margin: 0px 0px 8px; padding: 0px 0px 0px 30px; border: none; outline: none; font-size: 16px; line-height: inherit; list-style: none; position: relative; color: rgb(34, 34, 34); transition: 0.5s; font-weight: 700">The Tamilnadu electricity duty act 1939 and Tamilnadu Electricity duty Rules 1939.</li>
+                            <li style=" margin: 0px 0px 8px; padding: 0px 0px 0px 30px; border: none; outline: none; font-size: 16px; line-height: inherit; list-style: none; position: relative; color: rgb(34, 34, 34); transition: 0.5s; font-weight: 700">The Tamilnadu electricity (taxation on consumptions) act 1962 and Tamilnadu electricity (taxations on consumptions) rules 1964.</li>
+                            <li style=" margin: 0px 0px 8px; padding: 0px 0px 0px 30px; border: none; outline: none; font-size: 16px; line-height: inherit; list-style: none; position: relative; color: rgb(34, 34, 34); transition: 0.5s; font-weight: 700">Tamilnadu Electrical undertaking acquisition act 1973 and the rules made thereunder.</li>
+                            <li style=" margin: 0px 0px 8px; padding: 0px 0px 0px 30px; border: none; outline: none; font-size: 16px; line-height: inherit; list-style: none; position: relative; color: rgb(34, 34, 34); transition: 0.5s; font-weight: 700">Tamilnadu lift act 1997 and the rules made thereunder.</li>
+                            <li style=" margin: 0px 0px 8px; padding: 0px 0px 0px 30px; border: none; outline: none; font-size: 16px; line-height: inherit; list-style: none; position: relative; color: rgb(34, 34, 34); transition: 0.5s; font-weight: 700">Tamilnadu cinemas (regulations) act 1955 and Tamilnadu cinemas (regulations) rules 1957.</li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- <div class="col-lg-3 team-block"> -->
+            <!-- <div class="inner-box">
+                    <div class="image"><img src="../CMS_MGMT_portal/uploads/about/about_image_1737541294.jpg" alt=""></div>
+                    <div class="content">
+                        <h4>Secretary</h4>
+                        <div class="designation">Electrical Licensing Board,
+                            Thiru.Vi.Ka.Indl.Estate,
+                            Guindy. Chennai – 600 032</div>
+                    </div>
+                    <div class="overlay">
+                                <div class="content-two">
+                                    <h4>Paul Wilson</h4>
+                                    <div class="designation">mayor / Chairman</div>
+                                    <ul class="contact-info">
+                                        <li><a href="tel:+1(852)6105599"><i class="fas fa-phone"></i>+ 1 (852) 610
+                                                5599</a></li>
+                                        <li><a href="tel:+1(852)6105599"><i class="fas fa-envelope-open"></i>+ 1 (852)
+                                                610 5599</a></li>
+                                    </ul>
+                                    <ul class="social-links">
+                                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                                        <li><a href="#"><i class="fab fa-linked-in"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                </div> -->
+
+            <div class="col-lg-4 event-block mt-5">
+                <div class="inner-box wow fadeInUp animated" data-wow-delay="0ms" data-wow-duration="1500ms" style="visibility: visible; animation-duration: 1500ms; animation-delay: 0ms; animation-name: fadeInUp;">
+
+                    <div class="lower-content ">
+
+                        <div class="date">
+                            <!-- <img src="assets/images/new.gif"> -->
+                            <img class="blinking-text" src="assets/images/new.png">
+
+                        </div>
+                        <h5 class="pt-20 mt-2 mb-2" style="color: red;font-weight:600;">The fees structure for new issue and renewal of contractor licenses and competency certificates are revised w.e.f. 01-01-2024 </h5>
+
+                        <!-- <div class="location"><i class="fas fa-map-marker-alt"></i>The fees structure for new issue and renewal of contractor licenses and competency certificates are revised w.e.f. 01-01-2024</div> -->
+                        <marquee direction="up" scrollamount="4" height="200">
+                            <p>1. The prescribed fees for issue of Qualified 'C' for EA grade and Qualified Supervisor for ESA
+                                grade is <b> Rs.15,000/-</b> &amp; <b>Rs 25,000/-</b> respectively with effect from <b>01.05.2022</b></p>
+                            <p>2. All electrical contractors possessing EB, ESB, EA, ESA grade should also submit the copy of
+                                contractor license along with renewal application.</p>
+                        </marquee>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <hr>
+
 <!-- back_bg -->
 <section class="services-section " style="background: #fbfbfb;">
     <div class="auto-container">

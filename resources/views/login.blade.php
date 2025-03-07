@@ -83,12 +83,14 @@
                         <!-- <div class="bg-gray">
                             <h2>Login</h2>
                         </div> -->
-                        <form action="backend/login_page.php" method="post" id="contact-form">
+                        <form id="login-form">
 
 
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <input type="phone" id="phone" name="phone" value="" placeholder="Enter Phone">
+                                    <label> Enter  Mobile Number </label>
+                                    <input type="phone" id="phone" name="phone" value=""  class="form-control" placeholder="Enter Mobile Number">
+                                    <span id="phoneError" class="text-danger"></span>
                                 </div>
 
                             </div>
@@ -111,14 +113,15 @@
 
 
                                 <div class="form-group col-md-12">
-                                    <input type="text" name="captcha" class="form-control" placeholder="Enter CAPTCHA" required>
+                                <label> Enter Captcha Text</label>
+                                    <input type="text" name="captcha" class="form-control" placeholder="Enter CAPTCHA" >
                                 </div>
                             </div>
 
 
                             <button type="submit">Submit</button>
                         </form>
-                        <p class="text-md-right register_title mt-3"> Click to <a href="/register">Register </a></p>
+                        <p class="text-md-right register_title mt-3"> <a href="{{route('register')}}" style="text-decoration: underline;"> Click to Register </a></p>
                     </div>
                 </div>
             </div>
@@ -126,17 +129,18 @@
     </div>
 </section>
 <div class="separator50"></div>
-<!-- OTP Overlay Modal -->
+<!-- OTP  -->
+<!-- OTP Overlay -->
 <div id="otp-overlay" class="otp-overlay" style="display: none;">
     <div class="otp-modal">
         <h6>Please enter the one-time password to verify your account</h6>
         <div class="otp-inputs d-flex justify-content-center">
-            <input class="m-2 text-center form-control" type="text" id="first" maxlength="1" />
-            <input class="m-2 text-center form-control" type="text" id="second" maxlength="1" />
-            <input class="m-2 text-center form-control" type="text" id="third" maxlength="1" />
-            <input class="m-2 text-center form-control" type="text" id="fourth" maxlength="1" />
-            <input class="m-2 text-center form-control" type="text" id="fifth" maxlength="1" />
-            <input class="m-2 text-center form-control" type="text" id="sixth" maxlength="1" />
+            <input class="m-2 text-center form-control" type="text" maxlength="1" />
+            <input class="m-2 text-center form-control" type="text" maxlength="1" />
+            <input class="m-2 text-center form-control" type="text" maxlength="1" />
+            <input class="m-2 text-center form-control" type="text" maxlength="1" />
+            <input class="m-2 text-center form-control" type="text" maxlength="1" />
+            <input class="m-2 text-center form-control" type="text" maxlength="1" />
         </div>
         <h5>OTP: 123456</h5>
         <div class="mt-4">
@@ -144,8 +148,10 @@
         </div>
     </div>
 </div>
-<!-- Overlay background -->
+
+<!-- Overlay Background -->
 <div id="overlay-bg" class="overlay-bg" style="display: none;"></div>
+
 
 
 <footer class="main-footer">
@@ -205,14 +211,15 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             function OTPInput() {
-                const inputs = document.querySelectorAll('#otp > input');
+                const inputs = document.querySelectorAll('.otp-inputs > input');
+
                 for (let i = 0; i < inputs.length; i++) {
                     inputs[i].addEventListener('input', function() {
                         if (this.value.length > 1) {
-                            this.value = this.value[0]; //    
+                            this.value = this.value[0]; // Limit input to one character
                         }
                         if (this.value !== '' && i < inputs.length - 1) {
-                            inputs[i + 1].focus(); //   
+                            inputs[i + 1].focus(); // Move to next field
                         }
                     });
 
@@ -220,7 +227,7 @@
                         if (event.key === 'Backspace') {
                             this.value = '';
                             if (i > 0) {
-                                inputs[i - 1].focus();
+                                inputs[i - 1].focus(); // Move to previous field
                             }
                         }
                     });
@@ -229,14 +236,33 @@
 
             OTPInput();
 
-            const validateBtn = document.getElementById('validateBtn');
-            validateBtn.addEventListener('click', function() {
-                let otp = '';
-                document.querySelectorAll('#otp > input').forEach(input => otp += input.value);
-                window.location.href = "{{ route('user_login') }}";
+            $("#validateBtn").click(function() {
+                let otp = "";
+                $(".otp-inputs > input").each(function() {
+                    otp += $(this).val();
+                });
 
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('login.verify') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        otp: otp
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.href = response.redirect_url; // Redirect after successful login
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        alert(xhr.responseJSON.message);
+                    }
+                });
             });
         });
+
 
         $("#contact-form").submit(function(e) {
             e.preventDefault(); // Avoid the form submission

@@ -668,7 +668,44 @@
 	}
 
 	
+	document.getElementById('d_o_b').addEventListener('change', function() {
+		let dob = new Date(this.value);
+		let today = new Date();
 
+		let age = today.getFullYear() - dob.getFullYear();
+		let monthDiff = today.getMonth() - dob.getMonth();
+		let dateDiff = today.getDate() - dob.getDate();
+
+		if (monthDiff < 0 || (monthDiff === 0 && dateDiff < 0)) {
+			age--;
+		}
+
+		document.getElementById('age').value = age;
+
+	});
+
+	
+	
+	$(document).ready(function () {
+        $("#previous_exp").on("change", function () {
+            if ($(this).prop("checked")) {
+                $("#previously_details").slideDown(); // Show row
+            } else {
+                $("#previously_details").slideUp(); // Hide row
+            }
+        });
+    });
+
+	$(document).ready(function () {
+        $("#wireman_license").on("change", function () {
+            if ($(this).prop("checked")) {
+                $("#wireman_details").slideDown(); // Show row
+            } else {
+                $("#wireman_details").slideUp(); // Hide row
+            }
+        });
+    });
+	
 	
 	// Elements Animation
 	if($('.wow').length){
@@ -718,3 +755,5 @@
 	});	
 
 })(window.jQuery);
+
+

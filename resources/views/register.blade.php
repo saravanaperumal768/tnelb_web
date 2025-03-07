@@ -133,7 +133,8 @@
                                     <hr>
                                 </div>
                             </div>
-                            <form autocomplete="off" id="form1">
+                            <!-- autocomplete="off" -->
+                            <form id="form1">
                                 @csrf
                                 <div class="row">
 
@@ -160,11 +161,11 @@
                                             </div>
                                             <div class="col-12 col-md-8">
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <input type="radio" name="gender" value="Male">
                                                         <label for="Male">Male</label>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <input name="gender" type="radio" value="Female">
                                                         <label for="Female">Female</label>
                                                     </div>
@@ -182,25 +183,25 @@
                                             <div class="col-12 col-md-4">
                                                 <div class="form-group">
                                                     <label class="col-12 col-md-12" for="PhoneNo">Mobile number <span style="color: red;">*</span></label>
-
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-7">
                                                 <input type="text" id="PhoneNo" name="PhoneNo" class="form-control">
-
+                                                <span id="PhoneNoError" class="text-danger"></span>
                                             </div>
                                         </div>
+
 
                                         <div class="row pt-4">
                                             <div class="col-12 col-md-4">
                                                 <div class="form-group">
-                                                    <label class="col-12 col-md-12" for="PhoneNo">E-mail address <span style="color: red;">*</span></label>
+                                                    <label class="col-12 col-md-12" for="PhoneNo">E-mail address </label>
 
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-7">
                                                 <input type="email" id="EmailAddress" name="EmailAddress" class="form-control">
-
+                                                <span id="EmailError" class="text-danger"></span>
 
                                             </div>
                                         </div>
@@ -375,7 +376,8 @@
                             <div id="success-popup" class="popup">
                                 <h2>Registration Successful!</h2>
                                 <p>Your registration was completed successfully. You can now log in.</p>
-                                <a href="{{ route('login') }}" class="btn">OK</a>
+                                <h5>Your Login ID will be your Mobile Number</h5>
+                                <a href="{{ route('login') }} " class="btn btn-primary log_in mt-2">OK</a>
                             </div>
                             <div id="overlay" class="overlay"></div>
                         </div>
