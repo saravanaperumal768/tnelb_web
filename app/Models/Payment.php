@@ -13,6 +13,7 @@ class Payment extends Model
         'application_id', 
         'transaction_id', 
         'payment_status', 
+        'amount', 
         'form_name', 
         'license_name', 
        

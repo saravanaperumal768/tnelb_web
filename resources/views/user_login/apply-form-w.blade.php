@@ -1,19 +1,58 @@
 @include('include.header')
+<style>
+    hr {
+        margin-top: 2px;
+        margin-bottom: 5px;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, .1);
+    }
 
+    .form-group {
+        margin-bottom: 0px;
+    }
+    .swal2-popup.swal2-modal.swal2-show {
+        width: 100%;
+    }
+
+    .swal2-popup li {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+
+    .swal2-popup li {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+    .swal2-popup li ul{
+        margin-left: 15px;
+    }
+</style>
+
+<section class="">
+    <div class="container">
+        <ul id="breadcrumb">
+            <li><a href="{{ route('dashboard')}}"><span class="fa fa-home"> </span> Dashboard</a></li>
+            <li><a href="#"><span class=" fa fa-info-circle"> </span> Form W</a></li>
+
+        </ul>
+    </div>
+</section>
 <section class="apply-form">
     <div class="auto-container">
         <div class="wrapper-box">
             <div class="row">
                 <div class="col-lg-12 col-12">
                     <div class="apply-card apply-card-info" data-select2-id="14">
-                        <div class="apply-card-header" style="background-color: #877e85 !important;">
+                        <div class="apply-card-header" style="background-color: #70c6ef !important;">
                             <div class="row">
                                 <div class="col-6 col-lg-8">
-                                    <h5 class="card-title_apply text-white text-center"> New Registration Form <span style="font-weight: 600;">[ Form W - License 'B' ] </span></h5>
+                                    <h5 class="card-title_apply text-black text-left"> New Registration Form <span style="font-weight: 600;">[ Form W - License 'B' ] </span></h5>
                                 </div>
 
                                 <div class="col-6 col-lg-4 text-md-right">
-                                    <a href="{{url('assets/pdf/form_w_notes.pdf')}}" target="_blank"><i class="fa fa-download"></i>&nbsp; Important Notes</a>
+                                    <a href="{{url('assets/pdf/form_w_notes.pdf')}}" class="text-dark" target="_blank"><i class="fa fa-file-pdf-o" style="color: red;"></i>&nbsp; Important Notes</a>
                                 </div>
 
                             </div>
@@ -50,7 +89,7 @@
                                                         </div>
 
                                                         <div class="col-12 col-md-8 pd-left-40">
-                                                            <input autocomplete="off" class="form-control text-box single-line" id="Fathers_Name" name="Fathers_Name" type="text" value="">
+                                                            <input autocomplete="off" class="form-control text-box single-line" id="Fathers_Name" name="Fathers_Name" type="text" value="{{ isset($application) ? $application->fathers_name : '' }}">
                                                             <span class="error-message text-danger"></span>
                                                         </div>
                                                     </div>
@@ -84,7 +123,7 @@
                                                                     <label for="tamil" class="tamil">பிறந்த நாள்,மாதம், வருடம்</label>
                                                                 </div>
                                                                 <div class="col-12 col-md-6">
-                                                                    <input autocomplete="off" class="form-control text-box single-line" id="d_o_b" name="d_o_b" type="date" value="" placeholder="DD/MM/YY Age">
+                                                                    <input autocomplete="off" class="form-control text-box single-line" id="d_o_b" name="d_o_b" type="date"  placeholder="DD/MM/YY Age" value="{{ isset($application) ? $application->d_o_b : '' }}">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -97,7 +136,7 @@
                                                                     <label for="tamil" class="tamil"> வயது</label>
                                                                 </div>
                                                                 <div class="col-12 col-md-7">
-                                                                    <input autocomplete="off" class="form-control text-box single-line" id="age" name="age" type="number" value="" placeholder="" readonly>
+                                                                    <input autocomplete="off" class="form-control text-box single-line" id="age" name="age" type="number"  value="{{ isset($application) ? $application->age : '' }}" placeholder="" readonly>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -381,7 +420,7 @@
                                         </div>
                                         <hr>
 
-                                        <div class="row align-items-center">
+                                        <div class="row align-items-center"  style="display: none;">
                                             <div class="col-12 col-md-12 ">
                                                 <div class="row align-items-center">
                                                     <div class="col-12 col-md-9 ">
@@ -483,7 +522,8 @@
 
                                             <label class="container">
                                                 <div class="declaration-container">
-                                                    <input type="checkbox" id="declarationCheckbox" required>
+                                                <input type="checkbox" id="declarationCheckbox" required {{ isset($application) ? 'checked' : '' }}>
+
                                                     <span class="checkmark"></span>
                                                     I hereby declare that all the details mentioned above are correct and true to the best of my knowledge. I request you to issue me the qualification certificate.<br>
                                                     என் அறிவுக்கு எட்டியவரை மேலே குறிப்பிட்டுள்ள விவரங்கள் யாவும் சரியானவை எனவும் உண்மையானவை எனவும் உறுதி கூறுகிறேன். தகுதி சான்றிதழ் எனக்கு வழங்குமாறு வேண்டுகிறேன்.
@@ -499,8 +539,10 @@
 
 
                                     </div>
-                                    <input type="hidden" id="form_name" name="form_name" value="Form W">
+                                    <input type="hidden" id="form_name" name="form_name" value="W">
                                     <input type="hidden" id="license_name" name="license_name" value="B">
+                                    <input type="hidden" id="amount" name="amount" value="500">
+                                    <input type="hidden" id="form_id" name="form_id" value="2">
                                     @csrf
                                     <input type="hidden" id="form_action" name="form_action" value="draft">
 
@@ -514,9 +556,12 @@
                                 <div class="row mt-5">
                                     <div class="offset-md-5 col-12 col-md-6">
                                         <div class="form-group">
+                                        @if(! isset($application))
+
                                             <button type="button" class="btn btn-primary btn-social" id="saveDraftBtn">
                                                 Save As Draft
                                             </button>
+                                            @endif
                                             <button type="submit" class="btn btn-success btn-social" id="submitPaymentBtn">
                                                 Proceed for Payment
                                             </button>

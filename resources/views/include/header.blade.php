@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
 
 <head>
     <meta charset="utf-8">
@@ -93,10 +96,26 @@
 
                     </div>
                 </div>
+                <!-- <pre>{{ print_r(session()->all(), true) }}</pre> -->
 
                 <div class="logo-fun">
                     <div class="container">
                         <div class="row">
+                            @if(Auth::check())
+                            <div class="col-lg-8 col-md-12">
+                                <div class="flex-shrink-0 mr-3 mr-xl-8 mr-xlwd-16 d-none d-md-block">
+                                    <a href="/logout">
+                                        <img src="{{ asset('assets/images/logo/logo.png') }}" class="img-fluid" alt="tnelb" />
+                                    </a>
+                                </div>
+
+                                <div class="flex-shrink-0 mr-3 mr-xl-8 mr-xlwd-16 d-block d-lg-none">
+                                    <a href="/logout">
+                                        <img src="{{ asset('assets/images/logo/logo_mobile.png') }}" class="img-fluid" alt="tnelb" />
+                                    </a>
+                                </div>
+                            </div>
+                            @else
                             <div class="col-lg-8 col-md-12">
                                 <div class="flex-shrink-0 mr-3 mr-xl-8 mr-xlwd-16 d-none d-md-block">
                                     <a href="/">
@@ -110,43 +129,40 @@
                                     </a>
                                 </div>
                             </div>
+                            @endif
+
+
 
                             <div class="col-lg-4 col-md-12 text-center">
                                 <ul class="top-info-box">
                                     @if(Auth::check())
-                                    <li class="header-get-a-quote" >
+                                    <li class="header-get-a-quote">
                                         <div class="profile">
                                             <div class="user">
-                                            <a class="btn btn-success text-white text-capitalize" ><i class="fa fa-user-circle-o"></i>&nbsp; {{ Auth::user()->name }}</a>
+                                                <a class="btn btn-success text-white text-capitalize">
+                                                    <i class="fa fa-user-circle-o"></i>&nbsp; {{ Auth::user()->name }}
+                                                </a>
                                             </div>
-                                            
                                         </div>
                                         <div class="menu">
                                             <ul>
-                                                <!-- <li><a href="#"><i class="ph-bold ph-user"></i>&nbsp;Profile</a></li>
-                                                <li><a href="#"><i class="ph-bold ph-envelope-simple"></i>&nbsp;Inbox</a></li>
-                                                <li><a href="#"><i class="ph-bold ph-gear-six"></i>&nbsp;Settings</a></li>
-                                                <li><a href="#"><i class="ph-bold ph-question"></i>&nbsp;Help</a></li> -->
-                                                <li><a href="{{ route ('logout')}}"><i class="fa fa-sign-out"></i>&nbsp;Log Out</a></li>
+                                                <li>
+                                                    <a href="{{ route('logout') }}">
+                                                        <i class="fa fa-sign-out"></i>&nbsp;Log Out
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </li>
-<!-- 
-                                    <li class="header-get-a-quote">
-                                        <a class="btn btn-primary text-white" href="{{ route ('logout')}}"><i class="fa fa-sign-out"></i>&nbsp; Logout</a>
-                                    </li> -->
-
                                     @else
                                     <li class="header-get-a-quote">
-                                        <a class="btn btn-primary" href="/login">Applicant Sign In/ Sign Up</a>
+                                        <a class="btn btn-primary" href="{{ route('login') }}">Applicant Sign In/ Sign Up</a>
                                     </li>
-
                                     @endif
-                                    <!-- <li class="header-get-a-quote">
-                                    <a class="btn btn-primary" href="register.php">Applicant Sign Up</a>
-                                </li> -->
                                 </ul>
+
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -172,90 +188,74 @@
                                 <nav class="main-menu navbar-expand-md navbar-light">
                                     <div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
                                         <ul class="navigation">
-                                            <li class="dropdown"><a href="/">Home</a>
-
+                                            @if(Auth::check())
+                                            <!-- If user is logged in, clicking any link will log them out first -->
+                                            <li>
+                                                <a href="{{ route('logout') }}"
+                                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                    Home
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('logout') }}"
+                                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                    About
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('logout') }}"
+                                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                    Contact
+                                                </a>
                                             </li>
 
-                                            <li class="dropdown"><a href="#">About</a>
-                                                <ul>
-                                                    <!-- dropdown -->
-                                                    <li class=""><a href="/about">About </a>
-                                                        <!-- <ul>
-                                                        <li><a href="/about">About</a></li>
-                                                        <li><a href="about_tamil.php">About Tamil</a></li>
-                                                        <li><a href="#">Vision</a></li>
-                                                        <li><a href="#">Mission</a></li>
-                                                    </ul> -->
-                                                    </li>
-                                                    <li><a href="/vision">Vision</a></li>
-                                                    <li><a href="/mission">Mission</a></li>
-                                                    <li><a href="/future-scenario">Future Scenario</a></li>
+                                            <!-- Hidden Logout Form -->
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                @csrf
+                                            </form>
+                                            @else
+                                            <!-- Normal Navigation for Guests -->
+                                            <li class="dropdown"><a href="">Home</a></li>
 
+                                            <li class="dropdown">
+                                                <a href="#">About</a>
+                                                <ul>
+                                                    <li><a href="about">About</a></li>
+                                                    <li><a href="vision">Vision</a></li>
+                                                    <li><a href="mission">Mission</a></li>
+                                                    <li><a href="future-scenario">Future Scenario</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="/members">Members</a></li>
-                                            <li><a href="/rules">Rules</a></li>
-                                            <li><a href="/services-and-standards">Services & Standards</a></li>
-                                            <li><a href="/complaints">Complaints</a></li>
 
-                                            <li class="dropdown"><a href="#">Forms</a>
+                                            <li><a href="members">Members</a></li>
+                                            <li><a href="rules">Rules</a></li>
+                                            <li><a href="services-and-standards">Services & Standards</a></li>
+                                            <li><a href="complaints">Complaints</a></li>
+
+                                            <li class="dropdown">
+                                                <a href="#">Forms</a>
                                                 <ul>
-                                                    <li><a href="/login">Form WH</a></li>
-                                                    <li> <a href="/login">Form W</a></li>
-                                                    <li> <a href="/login">Form S</a></li>
-
-                                                    <li>
-                                                        <a href="/login">Form P</a>
-
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="/login">Form H TO B</a>
-
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="/login"> Form EB</a>
-
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="/login">Form SB</a>
-
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="/login">Form A</a>
-
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="/login"> Form SA</a>
-
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="/login"> Fees Structure</a>
-
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="/login"> Renewal Particulars (English)</a>
-
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="/login"> Renewal Particulars (Tamil)</a>
-
-                                                    </li>
+                                                    <li><a href="login">Form WH</a></li>
+                                                    <li><a href="login">Form W</a></li>
+                                                    <li><a href="login">Form S</a></li>
+                                                    <li><a href="login">Form P</a></li>
+                                                    <li><a href="login">Form H TO B</a></li>
+                                                    <li><a href="login">Form EB</a></li>
+                                                    <li><a href="login">Form SB</a></li>
+                                                    <li><a href="login">Form A</a></li>
+                                                    <li><a href="login">Form SA</a></li>
+                                                    <li><a href="login">Fees Structure</a></li>
+                                                    <li><a href="login">Renewal Particulars (English)</a></li>
+                                                    <li><a href="login">Renewal Particulars (Tamil)</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="/contact">Contact</a></li>
-                                            <!-- <li class=""><a href="/login" class="btn btn-info">Applicants  Portal</a></li> -->
 
+                                            <li><a href="contact">Contact</a></li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </nav>
+
                             </div>
                             <div class="navbar-right">
                                 <div class="search-form-two">
@@ -347,5 +347,3 @@
                     </div>
                 </div>
             </div>
-
-            

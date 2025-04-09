@@ -28,5 +28,5 @@ return new class extends Migration
         Schema::table('mst__form_s_ws', function (Blueprint $table) {
             Schema::rename('tnelb_application_tbl', 'mst__form_s_ws');
         });
-    }
+    }      
 };

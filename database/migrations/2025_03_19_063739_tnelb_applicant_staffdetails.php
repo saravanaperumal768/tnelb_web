@@ -13,17 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('tnelb_applicant_formA_staffdetails', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('application_id');
             $table->string('login_id');
-            $table->string('transaction_id');
-            $table->string('payment_status');
-            $table->string('amount')->nullable();
-            $table->string('form_name');
-            $table->string('license_name');
-            
-            
+            $table->string('application_id');
+            $table->string('staff_name');
+            $table->string('staff_qualification');
+            $table->string('cc_number');
+            $table->string('cc_validity');
+      
             $table->timestamps();
         });
     }
@@ -35,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payments');
+        //
     }
 };

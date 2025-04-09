@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Mst_Form_s_w;
 use Illuminate\Http\Request;
 
 use App\Models\Register;
@@ -15,13 +16,13 @@ class RegisterController extends Controller
     // {
     //     $this->middleware('auth'); 
     // }
-    
+
     public function register()
     {
         if (Auth::check()) {
             return redirect()->route('dashboard'); // Redirect logged-in users to dashboard or any other page
         }
-    
+
         return view('register'); // Show register page for guests
     }
 
@@ -39,6 +40,8 @@ class RegisterController extends Controller
             'state' => 'required|string',
             'district' => 'required|string',
             'pincode' => 'required|digits:6',
+            'aadhaar' => 'required|digits:12',
+            'pancard' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -48,7 +51,7 @@ class RegisterController extends Controller
             ], 422);
         }
 
-        // Get latest record to generate the login_id
+        // Generate Login ID
         $latestRecord = Register::latest('id')->first();
 
         if ($latestRecord && preg_match('/tnelb_(\d+)/', $latestRecord->login_id, $matches)) {
@@ -59,10 +62,7 @@ class RegisterController extends Controller
 
         $newLoginId = 'tnelb_' . $newRecord;
 
-        // return($newLoginId);
-        // exit;
-
-        
+        // Store Data in Database
         $register = Register::create([
             'name' => $request->input('Name'),
             'gender' => $request->input('gender'),
@@ -72,6 +72,8 @@ class RegisterController extends Controller
             'state' => $request->input('state'),
             'district' => $request->input('district'),
             'pincode' => $request->input('pincode'),
+            'aadhaar' => $request->input('aadhaar'),
+            'pancard' => $request->input('pancard'),
             'login_id' => $newLoginId,
         ]);
 
@@ -79,10 +81,8 @@ class RegisterController extends Controller
             'success' => true,
             'message' => 'Registration successful!',
             'login_id' => $newLoginId,
-            
         ], 200);
     }
-
 
     public function user_login()
     {
@@ -92,19 +92,62 @@ class RegisterController extends Controller
     public function apply_form_s()
     {
         if (!Auth::check()) {
-            return redirect()->route('logout'); 
+            return redirect()->route('logout');
         }
-    
+
         return view('user_login.apply-form-s');
     }
 
     public function apply_form_w()
     {
+
+        if (!Auth::check()) {
+            return redirect()->route('logout');
+        }
         return view('user_login.apply-form-w');
+    }
+
+
+    public function apply_form_wh()
+    {
+
+        if (!Auth::check()) {
+            return redirect()->route('logout');
+        }
+        return view('user_login.apply-form-wh');
+    }
+
+    public function apply_form_a()
+    {
+
+        if (!Auth::check()) {
+            return redirect()->route('logout');
+        }
+        return view('user_login.apply-form-a');
     }
 
     public function loginpage()
     {
         return view('loginpage');
+    }
+
+    public function apply_form($form_name, $application_id)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('logout');
+        }
+
+        
+        $application = Mst_Form_s_w::where('application_id', $application_id)->first();
+
+        if (!$application) {
+            return redirect()->back()->with('error', 'Application not found.');
+        }
+
+        // Return the view with the fetched data
+        $viewName = ($form_name === 's') ? 'user_login.apply-form-s' : 'user_login.apply-form-w';
+
+        // Return the dynamic view
+        return view($viewName, compact('application', 'form_name'));
     }
 }

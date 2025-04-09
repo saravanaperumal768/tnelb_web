@@ -197,49 +197,97 @@
     window.addEventListener('resize', setFooterPosition);
 </script>
 
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.all.min.js"> </script>
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let NameInput = document.getElementById("Name");
+
+        NameInput.addEventListener("input", function() {
+            this.value = this.value.replace(/[^A-Za-z\s]/g, ''); // Only letters and spaces
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+        let phoneInput = document.getElementById("PhoneNo");
+        let phoneError = document.getElementById("PhoneNoError");
+
+        phoneInput.addEventListener("input", function() {
+            // Remove non-digits
+            this.value = this.value.replace(/[^0-9]/g, '');
+
+            // Limit to 10 digits
+            if (this.value.length > 10) {
+                this.value = this.value.slice(0, 10);
+            }
+
+            // Live validation
+            if (this.value.length === 10) {
+                if (!/^[6-9]\d{9}$/.test(this.value)) {
+                    phoneError.textContent = "Enter a valid 10-digit mobile number starting with 6-9.";
+                } else {
+                    phoneError.textContent = "";
+                }
+            } else {
+                phoneError.textContent = "";
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+        let aadhaarInput = document.getElementById("aadhaar");
+        let aadhaarError = document.getElementById("aadhaarError");
+
+        aadhaarInput.addEventListener("input", function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+
+            if (this.value.length > 12) {
+                this.value = this.value.slice(0, 12);
+            }
+
+            if (this.value.length === 12) {
+                aadhaarError.textContent = "";
+            } else if (this.value.length > 0) {
+                aadhaarError.textContent = "Aadhaar number must be exactly 12 digits.";
+            } else {
+                aadhaarError.textContent = "";
+            }
+        });
+    });
+
+
     $(document).ready(function() {
+
+   
         $("#form1").submit(function(event) {
-
-
             event.preventDefault();
 
+            // Clear previous error messages
             $("#PhoneNoError").text("");
             $("#EmailError").text("");
+            $("#NameError").text("");
+            $("#GenderError").text("");
+            $("#AddressError").text("");
+            $("#StateError").text("");
+            $("#DistrictError").text("");
+            $("#PincodeError").text("");
+            $("#aadhaarError").text("");
+            $("#pancardError").text("");
 
             let name = $("#Name").val().trim();
             let gender = $("input[name='gender']:checked").val();
             let phone = $("#PhoneNo").val().trim();
-
             let email = $("#EmailAddress").val().trim();
             let address = $("#Address").val().trim();
             let state = $("#state").val();
             let district = $("#district").val();
             let pincode = $("#pincode").val().trim();
-            let errors = [];
+
+            let aadhaar = $("#aadhaar").val().trim();
+            let pancard = $("#pancard").val().trim();
 
 
 
-            if (name === "") errors.push("Name is required.");
-            if (!gender) errors.push("Gender is required.");
-            // if (phone === "") errors.push("Phone no is required.");
-            if (!/^\d{10}$/.test(phone)) errors.push("Enter a valid 10-digit mobile number.");
-            if (!/^[6-9]\d{9}$/.test(phone)) {
-                errors.push("Enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.");
-            }
 
-            if (email !== "" && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) errors.push("Enter a valid email.");
-            if (address === "") errors.push("Address is required.");
-            if (state === "") errors.push("Select a state.");
-            if (district === "") errors.push("Select a district.");
-            if (!/^\d{6}$/.test(pincode)) errors.push("Enter a valid 6-digit pincode.");
-
-            if (errors.length > 0) {
-                alert(errors.join("\n"));
-                return;
-            }
-            //  alert('after_error');
-            // alert(name + ', ' + gender + ', ' + phone + ', ' + email + ', ' + address + ', ' + state + ', ' + district + ', ' + pincode);
             let formData = {
                 _token: "{{ csrf_token() }}",
                 Name: name,
@@ -249,28 +297,16 @@
                 Address: address,
                 state: state,
                 district: district,
-                pincode: pincode
+                pincode: pincode,
+                aadhaar: aadhaar,
+                pancard: pancard,
             };
-
-            console.log("Submitting data:", formData);
 
             $.ajax({
                 type: "POST",
                 url: "{{ route('register.store') }}",
                 data: formData,
-                // success: function(response) {
-                //     console.log("Response:", response.success);
-                //     return false;
-                //     if (response.success) {
-                //         $("#success-popup").fadeIn();
-                //         $("#overlay").fadeIn();
-                //     } else {
-                //         alert("Registration failed.");
-                //     }
-                // },
                 success: function(response) {
-                    console.log("Response:", response);
-
                     if (response.success) {
                         $("#login-id-display").text(response.login_id);
                         $("#success-popup").fadeIn();
@@ -278,27 +314,45 @@
                     }
                 },
                 error: function(xhr) {
-                    let response = xhr.responseJSON;
-                    if (response && response.errors) {
-                        if (response.errors.PhoneNo) {
-                            $("#PhoneNoError").text(response.errors.PhoneNo[0]); // Show error under mobile number field
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        let errors = xhr.responseJSON.errors;
+
+                        if (errors.Name) {
+                            $("#NameError").text(errors.Name[0]);
                         }
-                        if (response.errors.EmailAddress) {
-                            $("#EmailError").text(response.errors.EmailAddress[0]); // Show error under email field
+                        if (errors.gender) {
+                            $("#GenderError").text(errors.gender[0]);
+                        }
+                        if (errors.PhoneNo) {
+                            $("#PhoneNoError").text(errors.PhoneNo[0]);
+                        }
+                        if (errors.EmailAddress) {
+                            $("#EmailError").text(errors.EmailAddress[0]);
+                        }
+                        if (errors.Address) {
+                            $("#AddressError").text(errors.Address[0]);
+                        }
+                        if (errors.state) {
+                            $("#StateError").text(errors.state[0]);
+                        }
+                        if (errors.district) {
+                            $("#DistrictError").text(errors.district[0]);
+                        }
+                        if (errors.pincode) {
+                            $("#PincodeError").text(errors.pincode[0]);
+                        }
+
+                        if (errors.aadhaar) {
+                            $("#aadhaarError").text(errors.aadhaar[0]);
+                        }
+                        if (errors.pancard) {
+                            $("#pancardError").text(errors.pancard[0]);
                         }
                     }
                 }
             });
         });
-
-        $(".log_in").click(function() {
-            console.log("Submitting data:");
-
-            window.location.href = "{{ route('login') }}";
-        });
-
     });
-
 
     $(document).ready(function() {
         $("#login-form").submit(function(event) {
@@ -351,6 +405,46 @@
             });
         });
 
+ document.addEventListener("DOMContentLoaded", function() {
+            function OTPInput() {
+                const inputs = document.querySelectorAll('.otp-inputs > input');
+                for (let i = 0; i < inputs.length; i++) {
+                    inputs[i].addEventListener('input', function() {
+                        if (this.value.length > 1) {
+                            this.value = this.value[0]; // Limit input to one character
+                        }
+                        if (this.value !== '' && i < inputs.length - 1) {
+                            inputs[i + 1].focus(); // Move to the next input field
+                        }
+                    });
+
+                    inputs[i].addEventListener('keydown', function(event) {
+                        if (event.key === 'Backspace') {
+                            this.value = '';
+                            if (i > 0) {
+                                inputs[i - 1].focus(); // Move to the previous input field on backspace
+                            }
+                        }
+                    });
+                }
+            }
+
+            OTPInput();
+
+            const validateBtn = document.getElementById('validateBtn');
+            validateBtn.addEventListener('click', function() {
+                let otp = '';
+                document.querySelectorAll('.otp-inputs > input').forEach(input => otp += input.value);
+
+                // If OTP is correct, redirect user to the login page
+                if (otp === '123456') {
+                    window.location.href = "{{ route('user_login') }}";
+
+                } else {
+                    alert("Incorrect OTP, please try again.");
+                }
+            });
+        });
 
 
         // Refresh CAPTCHA
@@ -367,6 +461,191 @@
         menu.classList.toggle('active');
     }
 </script>
+
+
+<script type="text/javascript">
+        var refreshButton = document.getElementById("refresh-captcha");
+        var captchaImage = document.getElementById("image-captcha");
+
+        refreshButton.onclick = function(event) {
+            event.preventDefault();
+            captchaImage.src = './captcha/image.php?' + Date.now();
+        };
+
+        $("#contact-form").submit(function(e) {
+
+            // console.log('asd');
+
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            // var phone = $("#phone").val();
+
+            var phone = $('input[name="phone"]').val();
+            // return false;
+
+
+            intRegex = /[0-9 -()+]+$/;
+
+            if ((phone.length < 10) || (!intRegex.test(phone))) {
+                alert('Please enter a valid phone number.');
+                return false;
+            }
+
+
+            if (phone.length !== 0) {
+                $('#otp_card').removeAttr("style");
+
+
+            }
+            console.log(phone);
+            return false;
+
+            // $.ajax({
+            //     type: "POST",
+            //     url: '',
+            //     data: form.serialize(), // serializes the form's elements.
+            //     success: function(data)
+            //     {
+            //     alert(data); // show response from the php script.
+            //     }
+            // });
+
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            function OTPInput() {
+                const inputs = document.querySelectorAll('.otp-inputs > input');
+
+                inputs.forEach((input, i) => {
+                    input.addEventListener('input', function() {
+                        if (this.value.length > 1) {
+                            this.value = this.value[0];
+                        }
+                        if (this.value !== '' && i < inputs.length - 1) {
+                            inputs[i + 1].focus();
+                        }
+                    });
+
+                    input.addEventListener('keydown', function(event) {
+                        if (event.key === 'Backspace') {
+                            this.value = '';
+                            if (i > 0) {
+                                inputs[i - 1].focus();
+                            }
+                        }
+                    });
+                });
+            }
+
+            OTPInput();
+
+            $("#validateBtn").click(function() {
+                let otp = "";
+                $(".otp-inputs > input").each(function() {
+                    otp += $(this).val();
+                });
+
+                if (otp.length !== 6) {
+                    alert("Please enter a valid 6-digit OTP.");
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('login.verify') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        otp: otp
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.href = response.redirect_url;
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        const errMsg = xhr.responseJSON?.message || "Something went wrong.";
+                        alert(errMsg);
+                    }
+                });
+            });
+
+        });
+
+
+        $("#contact-form").submit(function(e) {
+            e.preventDefault(); // Avoid the form submission
+
+            var phone = $('input[name="phone"]').val();
+
+            var intRegex = /[0-9 -()+]+$/;
+
+            if ((phone.length < 10) || (!intRegex.test(phone))) {
+                alert('Please enter a valid phone number.');
+                return false;
+            }
+
+            // Show OTP modal if the phone number is valid
+            if (phone.length !== 0) {
+                $('#otp-overlay').show();
+                $('#overlay-bg').show();
+            }
+
+            return false;
+        });
+
+        // Function to handle OTP input behavior
+        document.addEventListener("DOMContentLoaded", function() {
+            function OTPInput() {
+                const inputs = document.querySelectorAll('.otp-inputs > input');
+                for (let i = 0; i < inputs.length; i++) {
+                    inputs[i].addEventListener('input', function() {
+                        if (this.value.length > 1) {
+                            this.value = this.value[0]; // Limit input to one character
+                        }
+                        if (this.value !== '' && i < inputs.length - 1) {
+                            inputs[i + 1].focus(); // Move to the next input field
+                        }
+                    });
+
+                    inputs[i].addEventListener('keydown', function(event) {
+                        if (event.key === 'Backspace') {
+                            this.value = '';
+                            if (i > 0) {
+                                inputs[i - 1].focus(); // Move to the previous input field on backspace
+                            }
+                        }
+                    });
+                }
+            }
+
+            OTPInput();
+
+            const validateBtn = document.getElementById('validateBtn');
+            validateBtn.addEventListener('click', function() {
+                let otp = '';
+                document.querySelectorAll('.otp-inputs > input').forEach(input => otp += input.value);
+
+                // If OTP is correct, redirect user to the login page
+                if (otp === '123456') {
+                    window.location.href = "{{ route('user_login') }}";
+
+                } else {
+                    alert("Incorrect OTP, please try again.");
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            $("#refresh-captcha").click(function(e) {
+                e.preventDefault();
+                $("#image-captcha").attr("src", "{{ url('captcha/image') }}?" + Math.random());
+            });
+        });
+    </script>
 
 <script>
     $(document).ready(function() {
@@ -408,52 +687,78 @@
 
             $('.error-message').remove(); // Clear previous error messages
             let isValid = true;
+            let firstErrorField = null; // To store the first error field
 
             // Validate at least one education row exists
             if ($('#education-container .education-fields').length === 0) {
-                $('#education-table').after('<span class="error-message text-danger d-block mt-1">At least one educational qualification is required.</span>');
-                $('html, body').animate({
-                    scrollTop: $('#education-table').offset().top - 50
-                }, 500);
-                return;
-            }
-
-            let fathersName = $('#Fathers_Name').val().trim();
-            if (fathersName === "") {
-                $('#Fathers_Name').after('<span class="error-message text-danger d-block mt-1">Father\'s Name is required.</span>');
+                let errorMsg = $('<span class="error-message text-danger d-block mt-1">At least one educational qualification is required.</span>');
+                $('#education-table').after(errorMsg);
+                if (!firstErrorField) firstErrorField = errorMsg;
                 isValid = false;
             }
+
+            let nameRegex = /^[A-Za-z\s]+$/; // Allows only letters and spaces
+
+            // Validate Father's Name
+            let fathersName = $('#Fathers_Name').val().trim();
+            if (fathersName === "") {
+                let errorMsg = $('<span class="error-message text-danger d-block mt-1">Father\'s Name is required.</span>');
+                $('#Fathers_Name').after(errorMsg);
+                if (!firstErrorField) firstErrorField = $('#Fathers_Name');
+                isValid = false;
+            } else if (!nameRegex.test(fathersName)) {
+                let errorMsg = $('<span class="error-message text-danger d-block mt-1">Only alphabets and spaces are allowed.</span>');
+                $('#Fathers_Name').after(errorMsg);
+                if (!firstErrorField) firstErrorField = $('#Fathers_Name');
+                isValid = false;
+            }
+
+            // Validate Applicant's Name
+            let applicantName = $('#Applicant_Name').val().trim();
+            if (applicantName === "") {
+                let errorMsg = $('<span class="error-message text-danger d-block mt-1">Applicant\'s Name is required.</span>');
+                $('#Applicant_Name').after(errorMsg);
+                if (!firstErrorField) firstErrorField = $('#Applicant_Name');
+                isValid = false;
+            } else if (!nameRegex.test(applicantName)) {
+                let errorMsg = $('<span class="error-message text-danger d-block mt-1">Only alphabets and spaces are allowed.</span>');
+                $('#Applicant_Name').after(errorMsg);
+                if (!firstErrorField) firstErrorField = $('#Applicant_Name');
+                isValid = false;
+            }
+
+            // Scroll to the first error field if validation fails
+            if (!isValid && firstErrorField) {
+                $('html, body').animate({
+                    scrollTop: firstErrorField.offset().top - 50
+                }, 500);
+            }
+
+
 
             // Validate Date of Birth
             let dob = $('#d_o_b').val();
             if (dob === "") {
-                $('#d_o_b').after('<span class="error-message text-danger d-block mt-1">Date of Birth is required.</span>');
+                let errorMsg = $('<span class="error-message text-danger d-block mt-1">Date of Birth is required.</span>');
+                $('#d_o_b').after(errorMsg);
+                if (!firstErrorField) firstErrorField = errorMsg;
                 isValid = false;
             }
 
             if (!$('#declarationCheckbox').is(':checked')) {
                 $('#checkboxError').show();
+                if (!firstErrorField) firstErrorField = $('#checkboxError');
                 isValid = false;
             } else {
                 $('#checkboxError').hide();
             }
+
             let photoInput = $('#upload_photo')[0];
             if (photoInput.files.length === 0) {
-                $('#upload_photo').after('<span class="error-message text-danger d-block mt-1">Photo upload is required.</span>');
+                let errorMsg = $('<span class="error-message text-danger d-block mt-1">Photo upload is required.</span>');
+                $('#upload_photo').after(errorMsg);
+                if (!firstErrorField) firstErrorField = errorMsg;
                 isValid = false;
-            } else {
-                let file = photoInput.files[0];
-                let allowedTypes = ["image/jpeg", "image/png"];
-
-                if (!allowedTypes.includes(file.type)) {
-                    $('#upload_photo').after('<span class="error-message text-danger d-block mt-1">Only JPG and PNG images are allowed.</span>');
-                    isValid = false;
-                }
-
-                // if (file.size > 150 * 1024) {
-                //     $('#upload_photo').after('<span class="error-message text-danger d-block mt-1">File size must not exceed 150KB.</span>');
-                //     isValid = false;
-                // }
             }
 
             // Validate each education row
@@ -462,78 +767,41 @@
                 let instituteName = $(this).find('input[name="institute_name[]"]');
                 let yearOfPassing = $(this).find('select[name="year_of_passing[]"]');
                 let percentage = $(this).find('input[name="percentage[]"]');
-                let documentUpload = $(this).find('input[name="education_document[]"]');
 
                 if (eduLevel.val() === null) {
-                    eduLevel.after('<span class="error-message text-danger d-block mt-1">Please select education level.</span>');
+                    let errorMsg = $('<span class="error-message text-danger d-block mt-1">Please select education level.</span>');
+                    eduLevel.after(errorMsg);
+                    if (!firstErrorField) firstErrorField = errorMsg;
                     isValid = false;
                 }
 
                 if (instituteName.val().trim() === "") {
-                    instituteName.after('<span class="error-message text-danger d-block mt-1">Institution name is required.</span>');
+                    let errorMsg = $('<span class="error-message text-danger d-block mt-1">Institution name is required.</span>');
+                    instituteName.after(errorMsg);
+                    if (!firstErrorField) firstErrorField = errorMsg;
                     isValid = false;
                 }
 
                 if (yearOfPassing.val() === "0") {
-                    yearOfPassing.after('<span class="error-message text-danger d-block mt-1">Please select a valid year of passing.</span>');
+                    let errorMsg = $('<span class="error-message text-danger d-block mt-1">Please select a valid year of passing.</span>');
+                    yearOfPassing.after(errorMsg);
+                    if (!firstErrorField) firstErrorField = errorMsg;
                     isValid = false;
                 }
 
                 if (percentage.val().trim() === "" || isNaN(percentage.val()) || percentage.val() < 0 || percentage.val() > 100) {
-                    percentage.after('<span class="error-message text-danger d-block mt-1">Enter a valid Percentage /Grade.</span>');
+                    let errorMsg = $('<span class="error-message text-danger d-block mt-1">Enter a valid Percentage / Grade.</span>');
+                    percentage.after(errorMsg);
+                    if (!firstErrorField) firstErrorField = errorMsg;
                     isValid = false;
                 }
-
-                // if (documentUpload.val() === "") {
-                //     documentUpload.after('<span class="error-message text-danger d-block mt-1">Please upload a document.</span>');
-                //     isValid = false;
-                // }
             });
 
-            //     if ($('#work-container .work-fields').length === 0) {
-            //     $('#work-table').after('<span class="error-message text-danger d-block mt-1">At least one work experience entry is required.</span>');
-            //     $('html, body').animate({
-            //         scrollTop: $('#work-table').offset().top - 50
-            //     }, 500);
-            //     return;
-            // }
-
-            // // Validate each work experience row
-            // $('#work-container .work-fields').each(function() {
-            //     let companyName = $(this).find('input[name="work_level[]"]');
-            //     let experienceYears = $(this).find('input[name="experience[]"]');
-            //     let designation = $(this).find('input[name="Designation[]"]');
-            //     let documentUpload = $(this).find('input[name="work_document[]"]');
-
-            //     if (companyName.val().trim() === "") {
-            //         companyName.after('<span class="error-message text-danger d-block mt-1">Company name is required.</span>');
-            //         isValid = false;
-            //     }
-
-            //     if (experienceYears.val().trim() === "" || isNaN(experienceYears.val()) || experienceYears.val() <= 0) {
-            //         experienceYears.after('<span class="error-message text-danger d-block mt-1">Enter a valid number of years.</span>');
-            //         isValid = false;
-            //     }
-
-            //     if (designation.val().trim() === "") {
-            //         designation.after('<span class="error-message text-danger d-block mt-1">Designation is required.</span>');
-            //         isValid = false;
-            //     }
-
-            //     if (documentUpload.val() === "") {
-            //         // documentUpload.after('<span class="error-message text-danger d-block mt-1">Please upload an experience certificate.</span>');
-            //         // isValid = false;
-            //     } else {
-            //         let file = documentUpload[0].files[0];
-            //         let allowedTypes = ["application/pdf", "image/png"];
-            //         if (!allowedTypes.includes(file.type) || file.size > 100 * 1024) {
-            //             documentUpload.after('<span class="error-message text-danger d-block mt-1">Only PDF or PNG files under 100KB are allowed.</span>');
-            //             isValid = false;
-            //         }
-            //     }
-            // });
-
             if (!isValid) {
+                // Scroll to the first error
+                $('html, body').animate({
+                    scrollTop: firstErrorField.offset().top - 100
+                }, 500);
                 return; // Stop form submission if validation fails
             }
 
@@ -542,7 +810,7 @@
             formData.append('form_action', actionType);
 
             $.ajax({
-                url: "/form/store",
+                url: "{{ route('form.store') }}",
                 type: "POST",
                 data: formData,
                 processData: false,
@@ -554,55 +822,491 @@
                     $('#saveDraftBtn, #submitPaymentBtn').prop('disabled', true);
                 },
                 success: function(response) {
-                    alert(response.message);
-
-                    if (response.login_id) {
-                        $('#pdfButtons').html(`
-                            <button class="btn btn-primary" onclick="downloadPDF('english', '${response.login_id}')">Download Your Application in English PDF</button>
-                            <button class="btn btn-success" onclick="downloadPDF('tamil', '${response.login_id}')">Download Your Application in Tamil PDF</button>
-                        `);
-
-                        // Show the popup
-                        $('#pdfPopup').fadeIn();
+                    if (actionType === "draft") {
+                        Swal.fire({
+                            title: "Success!",
+                            text: "Form saved as draft!",
+                            icon: "success",
+                            confirmButtonText: "OK"
+                        }).then(() => {
+                            window.location.href = "{{ route('dashboard') }}"; // Redirect to dashboard
+                        });
+                    } else {
+                        showDeclarationPopup(response.login_id);
+                        // Swal.fire({
+                        //     title: "Payment Success!",
+                        //     text: "Your payment has been processed successfully.",
+                        //     icon: "success",
+                        //     confirmButtonText: "OK"
+                        // }).then(() => {
+                        //     $('#pdfButtons').html(`
+                        //         <button class="btn btn-primary" onclick="downloadPDF('english', '${response.login_id}')">Download English PDF</button>
+                        //         <button class="btn btn-success" onclick="downloadPDF('tamil', '${response.login_id}')">Download Tamil PDF</button>
+                        //     `);
+                        //     $('#pdfPopup').fadeIn();
+                        // });
                     }
-
                     $('#saveDraftBtn, #submitPaymentBtn').prop('disabled', false);
                 },
                 error: function(xhr) {
                     $('#saveDraftBtn, #submitPaymentBtn').prop('disabled', false);
-
-                    if (xhr.status === 422) {
-                        let errors = xhr.responseJSON.errors;
-
-                        $.each(errors, function(field, messages) {
-                            let inputField = $('[name="' + field + '"]');
-                            inputField.closest('.col-12').append('<span class="error-message text-danger d-block mt-1">' + messages[0] + '</span>');
-                        });
-
-                        $('html, body').animate({
-                            scrollTop: $('.error-message:first').offset().top - 50
-                        }, 500);
-                    } else {
-                        alert("An error occurred: " + xhr.responseText);
-                    }
+                    alert("An error occurred: " + xhr.responseText);
                 }
             });
         });
 
         $('#closePopup').on('click', function() {
             $('#pdfPopup').fadeOut(function() {
-                window.location.href = "/dashboard"; // Redirect to the dashboard page after the popup fades out
+                window.location.href = "{{ route('dashboard') }}";
+            });
+        });
+    });
+
+
+    function showDeclarationPopup(loginId) {
+        Swal.fire({
+            title: "Instructions",
+            html: `
+        <div style="text-align: left;">
+            <p><strong>Please confirm the following:</strong></p>
+         
+            <ul style="text-align: left; margin-top: 10px;margin-left:5px;">
+                <li><strong>1.(i)</strong> Fees for the issue of 'EA' Contractor licence from 01.01.2024 onwards Rs.30,000/-.</li>
+                <li><strong>(ii)</strong> Mode of Payment: Fees should be sent in favour of the Secretary, Electrical Licensing Board, Chennai by Bank Demand Draft obtained from any Scheduled Bank or Co-operative Bank payable at Chennai. Remittance of fees by any other method will not be accepted.</li>
+                <li><strong>2.</strong> The Proprietor or the Managing Partner/Director should have attained the age of 25 years and should have passed a minimum educational qualification of VIII Standard.</li>
+                <li><strong>3.</strong> Establishment: The applicant shall employ the following minimum staff on a full-time basis solely for the purpose of contract works:</li>
+                <li><strong>(i)</strong> One Supervisor holding Supervisor Competency Certificate granted by the Board with a minimum Technical Educational qualification of a Diploma in Electrical Engineering...</li>
+                <li><strong>4.</strong> Instruments: The applicant should possess the following instruments: 
+                    <ul>
+                        <li>One Number Earth Resistance Tester</li>
+                        <li>One Number 500 Volts Insulation Tester</li>
+                        <li>One Number 1000 Volts Insulation Tester</li>
+                        <li>One Number Phase Sequence Indicator</li>
+                        <li>One Number Tong Type Ammeter</li>
+                        <li>One Number Live Line Tester</li>
+                        <li>One Number Portable Voltmeter (Hand Operated)</li>
+                    </ul>
+                </li>
+                <li><strong>9.</strong> Financial Status: The applicant shall produce a Bank Solvency Certificate for Rs.50,000/- in Form 'G'...</li>
+            </ul>
+
+            <input type="checkbox" id="declaration-agree" name="cc_form" required>
+            <label for="declaration-agree"> I agree to the following terms:</label>
+        </div>
+        `,
+            showCancelButton: true,
+            confirmButtonText: "Proceed",
+            cancelButtonText: "Cancel",
+            preConfirm: () => {
+                let isChecked = document.getElementById("declaration-agree").checked;
+                if (!isChecked) {
+                    Swal.showValidationMessage("You must agree to proceed.");
+                }
+                return isChecked;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                showPaymentSuccessPopup(loginId);
+            }
+        });
+    }
+
+    // Function to show Payment Success Popup
+    function showPaymentSuccessPopup(loginId) {
+        Swal.fire({
+            title: "Payment Success!",
+            text: "Your payment has been processed successfully.",
+            icon: "success",
+            confirmButtonText: "Download PDF"
+        }).then(() => {
+            $('#pdfButtons').html(`
+            <button class="btn btn-primary" onclick="downloadPDF('english', '${loginId}')">Download English PDF</button>
+            <button class="btn btn-success" onclick="downloadPDF('tamil', '${loginId}')">Download Tamil PDF</button>
+        `);
+            $('#pdfPopup').fadeIn();
+        });
+    }
+
+    function downloadPDF(language, loginId) {
+        let url = (language === 'tamil') ? `generateTamilPDF/${loginId}` : `generate-pdf/${loginId}`;
+        window.open(url, '_blank'); // Open PDF in a new tab
+    }
+
+    function downloadPDF(language, loginId) {
+        let url = (language === 'tamil') ? `generateTamilPDF/${loginId}` : `generate-pdf/${loginId}`;
+        window.open(url, '_blank'); // Open in a new tab
+    }
+
+    $(document).ready(function() {
+        let currentYear = new Date().getFullYear();
+        let minDate = "1950-01-01"; // Minimum date (Jan 1, 1950)
+        let maxDate = `${currentYear}-12-31`; // Maximum date (Dec 31, Current Year)
+
+        $('#d_o_b').attr('min', minDate);
+        $('#d_o_b').attr('max', maxDate);
+    });
+
+    $(document).ready(function() {
+        let currentYear = new Date().getFullYear();
+        let minDate = `${currentYear - 50}-01-01`; // Maximum age 50 years
+        let maxDate = `${currentYear}-12-31`;
+
+        $('#d_o_b').attr('min', minDate);
+        $('#d_o_b').attr('max', maxDate);
+
+        $('#d_o_b').on('change', function() {
+            let dobValue = $(this).val();
+            if (dobValue) {
+                let dob = new Date(dobValue);
+                let today = new Date();
+                let age = today.getFullYear() - dob.getFullYear();
+                let monthDiff = today.getMonth() - dob.getMonth();
+                let dayDiff = today.getDate() - dob.getDate();
+
+                // Adjust age if the birthday hasn't occurred yet this year
+                if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                    age--;
+                }
+
+                if (age > 50) {
+                    $('#dobError').show();
+                    $('#age').val('');
+                    $('#d_o_b').val('');
+                } else {
+                    $('#dobError').hide();
+                    $('#age').val(age);
+                }
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#competency_form_a").on("submit", function(e) {
+            e.preventDefault(); // Prevent form submission
+
+            let formData = new FormData(this);
+            let actionType = $(document.activeElement).hasClass("save-draft") ? "draft" : "submit";
+            formData.append("form_action", actionType); // Append action type
+
+            // **Staff Validation**
+            let isValid = true;
+            $(".error").text(""); // Clear previous errors
+
+            let staffRows = $(".staff-fields");
+            if (staffRows.length !== 4) {
+                Swal.fire({
+                    title: "Error!",
+                    text: "Exactly 4 staff entries are required.",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                });
+                return;
+            }
+
+            staffRows.each(function(index, row) {
+                $(row).find("input, select").each(function() {
+                    if (!$(this).val().trim()) {
+                        isValid = false;
+                        let fieldName = $(this).attr("name").replace("[]", "");
+                        $("#" + fieldName + "_error").text("This field is required.");
+                    }
+                });
+            });
+
+            if (!isValid) {
+                return; // Stop submission if validation fails
+            }
+
+            $.ajax({
+                url: "{{ route('forma.store') }}",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+                beforeSend: function() {
+                    $(".save-draft, .submit-payment").prop("disabled", true);
+                },
+                success: function(response) {
+                    let loginId = response.login_id;
+
+                    if (actionType === "draft") {
+                        Swal.fire({
+                            title: "Success!",
+                            text: "Form saved as draft!",
+                            icon: "success",
+                            confirmButtonText: "OK",
+                        }).then(() => {
+                            window.location.href = "dashboard";
+                        });
+                    } else {
+                        // Show declaration popup first
+                        showDeclarationPopup(loginId).then((result) => {
+                            if (result.isConfirmed) {
+                                // Show payment success message
+                                Swal.fire({
+                                    title: "Payment Success!",
+                                    text: "Your payment has been processed successfully.",
+                                    icon: "success",
+                                    confirmButtonText: "OK",
+                                }).then(() => {
+                                    // Redirect to PDF generation
+                                    window.location.href = `generatea-pdf/${loginId}`;
+                                });
+                            }
+                        });
+                    }
+
+                    $(".save-draft, .submit-payment").prop("disabled", false);
+                },
+                error: function(xhr, status, error) {
+                    $(".save-draft, .submit-payment").prop("disabled", false);
+
+                    if (xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        if (errors) {
+                            $.each(errors, function(field, messages) {
+                                $("#" + field + "_error").text(messages[0]);
+                            });
+                        }
+                    } else {
+                        Swal.fire("Error!", "Something went wrong. Please try again later.", "error");
+                    }
+                },
+            });
+        });
+
+        function showDeclarationPopup(loginId) {
+            Swal.fire({
+                title: "Instructions",
+                html: `
+           <div style="text-align: left;">
+                <p><strong>Please confirm the following:</strong></p>
+               
+                <ul style="text-align: left; margin-top: 10px;">
+                    <li><strong>1.(i)</strong> Fees for the issue of 'EA' Contractor licence from 01.01.2024 onwards Rs.30,000/-.</li>
+                    <li><strong>(ii)</strong> Mode of Payment: Fees should be sent in favour of the Secretary, Electrical Licensing Board, Chennai by Bank Demand Draft obtained from any Scheduled Bank or Co-operative Bank payable at Chennai. Remittance of fees by any other method will not be accepted.</li>
+                    <li><strong>2.</strong> The Proprietor or the Managing Partner/Director should have attained the age of 25 years and should have passed a minimum educational qualification of VIII Standard.</li>
+                    <li><strong>3.</strong> Establishment: The applicant shall employ the following minimum staff on a full-time basis solely for the purpose of contract works:</li>
+                    <li><strong>(i)</strong> One Supervisor holding Supervisor Competency Certificate granted by the Board with a minimum Technical Educational qualification of a Diploma in Electrical Engineering or holding Supervisor Competency Certificate granted by the Board based on the certificate of Competency issued by the Board of Examiners, Directorate of Technical Education, Chennai, and having installation experience for a period of not less than two years and completion of at least five numbers of High Voltage works involving Transformer erection.</li>
+                    <li><strong>(ii)</strong> Two Wiremen holding valid Wiremen Competency Certificate granted by this Electrical Licensing Board. Applicants holding self-certificates can be taken into account for the above purpose. Consent letters obtained from the employees, including for self, should be furnished in the prescribed form. A detailed experience certificate of the appointed Supervisor is to be enclosed in original along with an attested copy clearly indicating the works carried out. The original Competency Certificates of the staff, including self, should be sent.</li>
+                    <li><strong>4.</strong> Instruments: The applicant should possess the following instruments:</li>
+                    <ul>
+                        <li>One Number Earth Resistance Tester</li>
+                        <li>One Number 500 Volts Insulation Tester</li>
+                        <li>One Number 1000 Volts Insulation Tester</li>
+                        <li>One Number Phase Sequence Indicator</li>
+                        <li>One Number Tong Type Ammeter</li>
+                        <li>One Number Live Line Tester</li>
+                        <li>One Number Portable Voltmeter (Hand Operated)</li>
+                    </ul>
+                    <li>These instruments should be tested in the Government Electrical Standards Laboratory attached to the office of the Chief Electrical Inspector to Government, Chennai-32, or in the MRT Laboratory of TNEB within three months prior to the date of application and test reports sent along with the application.</li>
+                    <li><strong>5.</strong> Specimen signatures of the contractor and their authorized person should be sent in triplicate on a separate sheet.</li>
+                    <li><strong>6.</strong> All the columns should be answered in words and figures, and no columns should be left blank.</li>
+                    <li><strong>7.</strong> Grade 'EA' Contractors can undertake High Voltage installation and all Medium Voltage and Low Voltage electrical installation works.</li>
+                    <li><strong>8.</strong> Applicants applying from outside Tamil Nadu should have a branch office in Tamil Nadu, and all correspondences will be made to that address only.</li>
+                    <li><strong>9.</strong> Financial Status: The applicant shall produce a Bank Solvency Certificate for Rs.50,000/- (Rupees fifty thousand only) in Form 'G' valid for a minimum period of three years obtained from a Scheduled Bank or Co-operative Bank operating in this State, mentioning the full name and address of the contractor as mentioned in Columns 1 and 2 of the application, obtained in the Bank's letterhead with the Bank's seal.</li>
+                </ul>
+
+                 <input type="checkbox" id="declaration-agree" name="enclosure" required>
+                <label for="declaration-agree"> I agree to the following terms:</label>
+            </div>
+
+        `,
+                showCancelButton: true,
+                confirmButtonText: "Proceed",
+                cancelButtonText: "Cancel",
+                preConfirm: () => {
+                    let isChecked = document.getElementById("declaration-agree").checked;
+                    if (!isChecked) {
+                        Swal.showValidationMessage("You must agree to proceed.");
+                    }
+                    return isChecked;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `generatea-pdf/${loginId}`;
+                }
+            });
+        }
+        // **Clear Error Messages on Input**
+        $("input, select, textarea").on("input change", function() {
+            let fieldName = $(this).attr("name").replace("[]", "");
+            $("#" + fieldName + "_error").text("");
+        });
+
+        // **Ensure exactly 4 rows are added**
+        document.addEventListener("click", function(e) {
+            let container = document.getElementById("staff-container");
+            let staffRows = container.querySelectorAll(".staff-fields");
+
+            if (e.target.closest(".add-more")) {
+                if (staffRows.length >= 4) {
+                    alert("You can add a maximum of 4 staff entries.");
+                    return;
+                }
+                let newRow = document.createElement("tr");
+                newRow.classList.add("staff-fields");
+                newRow.innerHTML = `
+    <td>${staffRows.length + 1}</td>
+    <td><input type="text" name="staff_name[]" class="form-control">
+        <span class="error text-danger" id="staff_name_error"></span>
+    </td>
+    <td>
+        <select class="form-control" name="staff_qualification[]">
+            <option selected disabled>Qualification</option>
+            <option value="PG">PG</option>
+            <option value="UG">UG</option>
+            <option value="Diploma">Diploma</option>
+            <option value="+2">+2</option>
+            <option value="10">10</option>
+        </select>
+        <span class="error text-danger" id="staff_qualification_error"></span>
+    </td>
+    <td><input type="text" class="form-control" name="cc_number[]" placeholder="Competency Certificate Number">
+        <span class="error text-danger" id="cc_number_error"></span>
+    </td>
+    <td>
+        <input type="text" class="form-control" name="cc_validity[]" placeholder="Validity"
+            onfocus="(this.type='date')" onblur="(this.type='text')">
+        <span class="error text-danger" id="cc_validity_error"></span>
+    </td>
+    <td>
+        <button type="button" class="btn btn-danger remove-staff">
+            <i class="fa fa-trash-o"></i>
+        </button>
+    </td>
+`;
+                container.appendChild(newRow);
+            }
+
+            if (e.target.closest(".remove-staff")) {
+                if (staffRows.length <= 1) {
+                    alert("At least one staff entry is required.");
+                    return;
+                }
+                e.target.closest("tr").remove();
+
+                container.querySelectorAll(".staff-fields").forEach((row, index) => {
+                    row.children[0].textContent = index + 1;
+                });
+            }
+        });
+
+        // **Close PDF Popup and Redirect**
+        $("#closePopup").on("click", function() {
+            $("#pdfPopup").fadeOut(function() {
+                window.location.href = "dashboard";
+            });
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let applicantNameInput = document.getElementById("Applicant_Name");
+
+        applicantNameInput.addEventListener("focus", function() {
+            this.addEventListener("input", function() {
+                this.value = this.value.replace(/[^A-Za-z\s]/g, ''); // Allow only letters and spaces
+            });
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let applicantNameInput = document.getElementById("Fathers_Name");
+
+        applicantNameInput.addEventListener("focus", function() {
+            this.addEventListener("input", function() {
+                this.value = this.value.replace(/[^A-Za-z\s]/g, ''); // Allow only letters and spaces
             });
         });
     });
 
 
 
+    $(document).ready(function() {
+        function restrictToLetters(inputSelector) {
+            $(document).on("input", inputSelector, function() {
+                this.value = this.value.replace(/[^A-Za-z\s]/g, ''); // Allow only letters and spaces
+            });
+        }
 
-    function downloadPDF(language, loginId) {
-        let url = (language === 'tamil') ? `/generateTamilPDF/${loginId}` : `/generate-pdf/${loginId}`;
-        window.open(url, '_blank'); // Open in a new tab
-    }
+        // Apply validation to multiple fields
+        restrictToLetters("[name='institute_name[]']");
+        restrictToLetters("[name='work_level[]']");
+        restrictToLetters("[name='Designation[]']");
+
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".percentage-input").forEach(input => {
+            input.addEventListener("blur", function() {
+                let value = parseFloat(this.value); // Convert to float
+                let errorSpan = this.nextElementSibling;
+
+                if (isNaN(value) || value < 1 || value > 99) {
+                    errorSpan.textContent = "Please enter a valid number between 1 and 99.";
+                    this.classList.add("is-invalid"); // Adds red border
+                } else {
+                    errorSpan.textContent = "";
+                    this.classList.remove("is-invalid");
+                }
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let checkbox = document.getElementById("previous_exp");
+        let detailsDiv = document.getElementById("previously_details");
+        let licenseInput = document.getElementById("previously_number");
+        let dateInput = document.getElementById("previously_date");
+        let licenseError = document.getElementById("licenseError");
+        let dateError = document.getElementById("dateError");
+
+        checkbox.addEventListener("change", function() {
+            if (this.checked) {
+                detailsDiv.style.display = "flex"; // Show details section
+                licenseInput.setAttribute("required", "required");
+                dateInput.setAttribute("required", "required");
+            } else {
+                detailsDiv.style.display = "none"; // Hide details section
+                licenseInput.removeAttribute("required");
+                dateInput.removeAttribute("required");
+                licenseError.textContent = "";
+                dateError.textContent = "";
+            }
+        });
+
+        // Form validation on submit
+        document.querySelector("form").addEventListener("submit", function(event) {
+            if (checkbox.checked) {
+                let isValid = true;
+
+                if (licenseInput.value.trim() === "") {
+                    licenseError.textContent = "License Number is required.";
+                    isValid = false;
+                } else {
+                    licenseError.textContent = "";
+                }
+
+                if (dateInput.value.trim() === "") {
+                    dateError.textContent = "Date is required.";
+                    isValid = false;
+                } else {
+                    dateError.textContent = "";
+                }
+
+                if (!isValid) {
+                    event.preventDefault(); // Prevent form submission if validation fails
+                }
+            }
+        });
+    });
 </script>
 
 </body>

@@ -6,6 +6,7 @@ use App\Models\Login_Logs;
 use App\Models\Register;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
@@ -48,58 +49,57 @@ class LoginController extends Controller
     }
 
     public function verifyOtp(Request $request)
-{
-    $request->validate([
-        'otp' => 'required|digits:6',
-    ]);
-
-    if ($request->otp !== '123456') {
+    {
+        $request->validate([
+            'otp' => 'required|digits:6',
+        ]);
+    
+        if ($request->otp !== '123456') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid OTP. Please try again.'
+            ], 422);
+        }
+    
+        $loginUser = Session::get('login_user');
+        if (!$loginUser) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Session expired. Please log in again.'
+            ], 401);
+        }
+    
+        $user = Register::where('login_id', $loginUser)->first();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+    
+        // Store session and login
+        Session::put('login_id', $user->login_id);
+        Session::put('user_name', $user->name);
+        Auth::login($user);
+    
+        Login_Logs::create([
+            'login_id' => $user->login_id,
+            'ipaddress' => request()->ip(),
+            'Idate' => now(),
+            'attempt' => 1,
+            'duration' => 0.00,
+        ]);
+    
         return response()->json([
-            'success' => false,
-            'message' => 'Invalid OTP. Please try again.'
-        ], 422);
+            'success' => true,
+            'message' => 'Login successful',
+             'redirect_url' => route('finalize.login'),
+
+            'user_name' => $user->name,
+        ], 200);
     }
-
-    $loginUser = Session::get('login_user');
-    if (!$loginUser) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Session expired. Please log in again.'
-        ], 401);
-    }
-
-    // Fetch user details
-    $user = Register::where('login_id', $loginUser)->first();
-
-    if (!$user) {
-        return response()->json([
-            'success' => false,
-            'message' => 'User not found'
-        ], 404);
-    }
-
-    // ✅ Store login_id in session
-    Session::put('login_id', $user->login_id);
-
-    // ✅ Authenticate user
-    Auth::login($user);
-
-    // Insert login log
-    Login_Logs::create([
-        'login_id' => $user->login_id,
-        'ipaddress' => request()->ip(),
-        'Idate' => now(),
-        'attempt' => 1,
-        'duration' => 0.00,
-    ]);
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Login successful',
-        'redirect_url' => route('dashboard')
-    ], 200);
-}
-
+    
+    
 
 
     public function logout()
@@ -118,10 +118,30 @@ class LoginController extends Controller
             return redirect()->route('login')->with('error', 'Session expired. Please log in again.');
         }
     
-        // Fetch records from mst_workflows where login_id matches
-        $workflows = \Illuminate\Support\Facades\DB::table('mst_workflows')->where('login_id', $loginId)->get();
+        // Retrieve user details
+        $user = DB::table('tnelb_registers')->where('login_id', $loginId)->first(); 
     
-        return view('user_login.index', compact('loginId', 'workflows'));
+        // Store user name in session
+        if ($user) {
+            session(['name' => $user->name]);
+        }
+    
+        // Fetch workflows
+        $workflows_cl = DB::table('tnelb_applicant_formA as af')
+            ->leftJoin('tnelb_license as l', 'af.application_id', '=', 'l.application_id')
+            ->where('af.login_id', $loginId)
+            ->select('af.*', 'l.license_number')
+            ->get();
+    
+        $workflows_present = DB::table('tnelb_application_tbl as ta') 
+            ->leftJoin('tnelb_license as l', 'ta.application_id', '=', 'l.application_id') 
+            ->where('ta.login_id', $loginId)
+            ->whereNotNull('l.license_number') 
+            ->where('l.license_number', '!=', '') 
+            ->select('ta.*', 'l.*')
+            ->get();
+    
+        return view('user_login.index', compact('loginId', 'workflows_cl', 'workflows_present'));
     }
     
 }

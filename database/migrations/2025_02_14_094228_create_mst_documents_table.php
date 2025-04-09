@@ -19,12 +19,17 @@ return new class extends Migration
             $table->string('application_id')->nullable();
             $table->text('education_serial')->nullable();
             $table->text('experience_serial')->nullable();
+            // $table->binary('education_doc')->nullable();
+            // $table->binary('experience_doc')->nullable();
+            // $table->binary('upload_photo')->nullable();
+            // $table->binary('upload_sign')->nullable();
 
             $table->text('education_doc')->nullable();
             $table->text('experience_doc')->nullable();
-
             $table->text('upload_photo')->nullable();
             $table->text('upload_sign')->nullable();
+
+
             // $table->string('application_id');
             $table->timestamps();
         });

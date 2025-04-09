@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('state');
             $table->string('district');
             $table->string('pincode', 6);
+            $table->string('aadhaar', 12);
+            $table->string('pancard')->nullable()->unique();
             $table->string('login_id')->default('');
             $table->string('password')->default('');
             $table->timestamps();

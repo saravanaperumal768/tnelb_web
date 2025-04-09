@@ -27,8 +27,10 @@ return new class extends Migration
             $table->string('application_id');
             $table->text('form_name');
             $table->text('license_name');
+            $table->text('application_status');
+            $table->text('license_number');
             
-            $table->string('status')->nullable();
+            $table->string('payment_status')->nullable();
             $table->timestamps();
         });
     }

@@ -88,8 +88,8 @@
 
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label> Enter  Mobile Number </label>
-                                    <input type="phone" id="phone" name="phone" value=""  class="form-control" placeholder="Enter Mobile Number">
+                                    <label> Enter Mobile Number </label>
+                                    <input type="phone" id="phone" name="phone" value="" class="form-control" placeholder="Enter Mobile Number">
                                     <span id="phoneError" class="text-danger"></span>
                                 </div>
 
@@ -104,17 +104,16 @@
                             <div class="row">
 
                                 <div class="form-group col-md-12">
-                                    <img src="{{ url('captcha/image') }}" alt="CAPTCHA" id="image-captcha">
+                                    <img src="{{ captcha_src('flat') }}" alt="CAPTCHA" id="image-captcha">
                                     <a href="#" id="refresh-captcha" class="align-middle" title="refresh">
-                                        <span class="fas fa-redo-alt align-middle" style="margin-left: 20px; color:#035ab3;"></span>
-                                    </a>
+                                        <span class="fas fa-redo-alt align-middle" style="margin-left: 20px; color:#035ab3;"></span></a>
                                 </div>
 
 
 
                                 <div class="form-group col-md-12">
-                                <label> Enter Captcha Text</label>
-                                    <input type="text" name="captcha" class="form-control" placeholder="Enter CAPTCHA" >
+                                    <label> Enter Captcha Text</label>
+                                    <input type="text" name="captcha" class="form-control" placeholder="Enter CAPTCHA">
                                 </div>
                             </div>
 
@@ -159,178 +158,4 @@
     @include('include.footer')
 
 
-    <script type="text/javascript">
-        var refreshButton = document.getElementById("refresh-captcha");
-        var captchaImage = document.getElementById("image-captcha");
-
-        refreshButton.onclick = function(event) {
-            event.preventDefault();
-            captchaImage.src = './captcha/image.php?' + Date.now();
-        };
-
-        $("#contact-form").submit(function(e) {
-
-            // console.log('asd');
-
-
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-
-            // var phone = $("#phone").val();
-
-            var phone = $('input[name="phone"]').val();
-            // return false;
-
-
-            intRegex = /[0-9 -()+]+$/;
-
-            if ((phone.length < 10) || (!intRegex.test(phone))) {
-                alert('Please enter a valid phone number.');
-                return false;
-            }
-
-
-            if (phone.length !== 0) {
-                $('#otp_card').removeAttr("style");
-
-
-            }
-            console.log(phone);
-            return false;
-
-            // $.ajax({
-            //     type: "POST",
-            //     url: '',
-            //     data: form.serialize(), // serializes the form's elements.
-            //     success: function(data)
-            //     {
-            //     alert(data); // show response from the php script.
-            //     }
-            // });
-
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
-            function OTPInput() {
-                const inputs = document.querySelectorAll('.otp-inputs > input');
-
-                for (let i = 0; i < inputs.length; i++) {
-                    inputs[i].addEventListener('input', function() {
-                        if (this.value.length > 1) {
-                            this.value = this.value[0]; // Limit input to one character
-                        }
-                        if (this.value !== '' && i < inputs.length - 1) {
-                            inputs[i + 1].focus(); // Move to next field
-                        }
-                    });
-
-                    inputs[i].addEventListener('keydown', function(event) {
-                        if (event.key === 'Backspace') {
-                            this.value = '';
-                            if (i > 0) {
-                                inputs[i - 1].focus(); // Move to previous field
-                            }
-                        }
-                    });
-                }
-            }
-
-            OTPInput();
-
-            $("#validateBtn").click(function() {
-                let otp = "";
-                $(".otp-inputs > input").each(function() {
-                    otp += $(this).val();
-                });
-
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('login.verify') }}",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        otp: otp
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            window.location.href = response.redirect_url; // Redirect after successful login
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        alert(xhr.responseJSON.message);
-                    }
-                });
-            });
-        });
-
-
-        $("#contact-form").submit(function(e) {
-            e.preventDefault(); // Avoid the form submission
-
-            var phone = $('input[name="phone"]').val();
-
-            var intRegex = /[0-9 -()+]+$/;
-
-            if ((phone.length < 10) || (!intRegex.test(phone))) {
-                alert('Please enter a valid phone number.');
-                return false;
-            }
-
-            // Show OTP modal if the phone number is valid
-            if (phone.length !== 0) {
-                $('#otp-overlay').show();
-                $('#overlay-bg').show();
-            }
-
-            return false;
-        });
-
-        // Function to handle OTP input behavior
-        document.addEventListener("DOMContentLoaded", function() {
-            function OTPInput() {
-                const inputs = document.querySelectorAll('.otp-inputs > input');
-                for (let i = 0; i < inputs.length; i++) {
-                    inputs[i].addEventListener('input', function() {
-                        if (this.value.length > 1) {
-                            this.value = this.value[0]; // Limit input to one character
-                        }
-                        if (this.value !== '' && i < inputs.length - 1) {
-                            inputs[i + 1].focus(); // Move to the next input field
-                        }
-                    });
-
-                    inputs[i].addEventListener('keydown', function(event) {
-                        if (event.key === 'Backspace') {
-                            this.value = '';
-                            if (i > 0) {
-                                inputs[i - 1].focus(); // Move to the previous input field on backspace
-                            }
-                        }
-                    });
-                }
-            }
-
-            OTPInput();
-
-            const validateBtn = document.getElementById('validateBtn');
-            validateBtn.addEventListener('click', function() {
-                let otp = '';
-                document.querySelectorAll('.otp-inputs > input').forEach(input => otp += input.value);
-
-                // If OTP is correct, redirect user to the login page
-                if (otp === '123456') {
-                    window.location.href = "{{ route('user_login') }}";
-
-                } else {
-                    alert("Incorrect OTP, please try again.");
-                }
-            });
-        });
-
-        $(document).ready(function() {
-            $("#refresh-captcha").click(function(e) {
-                e.preventDefault();
-                $("#image-captcha").attr("src", "{{ url('captcha/image') }}?" + Math.random());
-            });
-        });
-    </script>
+  

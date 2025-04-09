@@ -21,66 +21,46 @@ class FormController extends Controller
         $this->middleware('web');
     }
 
+
+
     public function store(Request $request)
     {
         $action = $request->input('form_action');
         $loginId = $request->login_id_store;
-        $timestamp = time();
 
         // Generate New Application ID
         $lastApplication = Mst_Form_s_w::latest('id')->value('application_id');
         if ($lastApplication) {
             $lastNumber = (int) substr($lastApplication, -7);
-            $newApplicationId = $request->license_name . date('y') . str_pad($lastNumber + 1, 7, '0', STR_PAD_LEFT);
+            $newApplicationId =$request->form_name. $request->license_name . date('y') . str_pad($lastNumber + 1, 7, '0', STR_PAD_LEFT);
         } else {
-            $newApplicationId = $request->license_name . date('y') . '1111111';
+            $newApplicationId =$request->form_name. $request->license_name . date('y') . '1111111';
         }
-        // $validator = FacadesValidator::make($request->all(), [
-        //     'Applicant_Name' => 'required|string|max:255',
-        //     'Fathers_Name' => 'required|string|max:255',
-        //     'applicants_address' => 'required|string|max:500',
-        //     'd_o_b' => 'required|date',
-        //     'age' => 'required|integer|min:1|max:120',
-        // ]);
 
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         'errors' => $validator->errors()
-        //     ], 422);
-        // }
-
-        // Store or Update Form
-        $form = Mst_Form_s_w::create(
-            // ['login_id' => $request->login_id_store],
-            [
-                'login_id' => $request->login_id_store,
-                'applicant_name' => $request->Applicant_Name,
-                'fathers_name' => $request->Fathers_Name,
-                'applicants_address' => $request->applicants_address,
-                'd_o_b' => $request->d_o_b,
-                'age' => $request->age,
-                'previously_number' => $request->previously_number ?? 0,
-                'previously_date' => $request->previously_date ?? 0,
-                'login_id' => $request->login_id_store,
-                'application_id' => $newApplicationId,
-                'wireman_details' => $request->wireman_details,
-                'form_name' => $request->form_name,
-                'license_name' => $request->license_name,
-                'status' => ($action === 'draft') ? 'draft' : 'payment',
-            ]
-        );
-
-        // return $form;
-        // exit;
-
-        // Store Education Details
-        // Generate education serial (only one for all education entries)
-
+        // Store Form Data
+        $form = Mst_Form_s_w::create([
+            'login_id' => $loginId,
+            'applicant_name' => $request->Applicant_Name,
+            'fathers_name' => $request->Fathers_Name,
+            'applicants_address' => $request->applicants_address,
+            'd_o_b' => $request->d_o_b,
+            'age' => $request->age,
+            'previously_number' => $request->previously_number ?? 0,
+            'previously_date' => $request->previously_date ?? 0,
+            'application_id' => $newApplicationId,
+            'wireman_details' => $request->wireman_details,
+            'form_name' => $request->form_name,
+            'form_id' => $request->form_id,
+            'license_name' => $request->license_name,
+            'status' => 'P',
+            // 'license_number'=>'',
+            
+            'payment_status' => ($action === 'draft') ? 'draft' : 'payment',
+        ]);
 
         // Process Educational Qualifications
         if ($request->has('educational_level')) {
             foreach ($request->educational_level as $key => $level) {
-                // Generate a new edu_serial for each entry
                 $edu_serial = Mst_education::latest('id')->value('edu_serial');
                 $newedu = $edu_serial ? 'edu_' . ((int) substr($edu_serial, 4) + 1) : 'edu_1';
 
@@ -91,19 +71,19 @@ class FormController extends Controller
                     'year_of_passing' => $request->year_of_passing[$key],
                     'percentage' => $request->percentage[$key],
                     'application_id' => $newApplicationId,
-                    'edu_serial' => $newedu, // Unique per education record
+                    'edu_serial' => $newedu,
                 ]);
 
-                // Store associated education document (if exists)
                 if ($request->hasFile("education_document") && isset($request->file("education_document")[$key])) {
-                    $educationDoc = base64_encode(file_get_contents($request->file("education_document")[$key]));
+                    $file = $request->file("education_document")[$key];
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('education', $filename, 'public');
 
-                    // Store a separate row in Mst_documents for each education entry
                     Mst_documents::create([
                         'login_id' => $loginId,
-                        'education_serial' => $newedu, // Link to education record
-                        'experience_serial' => null, // No experience linked here
-                        'education_doc' => $educationDoc,
+                        'education_serial' => $newedu,
+                        'experience_serial' => null,
+                        'education_doc' => $filePath,
                         'experience_doc' => null,
                         'upload_photo' => null,
                         'upload_sign' => null,
@@ -117,10 +97,9 @@ class FormController extends Controller
         if ($request->has('work_level')) {
             foreach ($request->work_level as $key => $company) {
                 if (empty($company) || empty($request->experience[$key]) || empty($request->Designation[$key])) {
-                    continue; // Skip empty entries
+                    continue;
                 }
 
-                // Generate a new exp_serial for each entry
                 $exp_serial = Mst_experience::latest('id')->value('exp_serial');
                 $newexp = $exp_serial ? 'exp_' . ((int) substr($exp_serial, 4) + 1) : 'exp_1';
 
@@ -130,20 +109,20 @@ class FormController extends Controller
                     'experience' => $request->experience[$key],
                     'designation' => $request->Designation[$key],
                     'application_id' => $newApplicationId,
-                    'exp_serial' => $newexp, // Unique per experience record
+                    'exp_serial' => $newexp,
                 ]);
 
-                // Store associated work document (if exists)
                 if ($request->hasFile("work_document") && isset($request->file("work_document")[$key])) {
-                    $workDoc = base64_encode(file_get_contents($request->file("work_document")[$key]));
+                    $file = $request->file("work_document")[$key];
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('work_experience', $filename, 'public');
 
-                    // Store a separate row in Mst_documents for each work experience entry
                     Mst_documents::create([
                         'login_id' => $loginId,
-                        'education_serial' => null, // No education linked here
-                        'experience_serial' => $newexp, // Link to work record
+                        'education_serial' => null,
+                        'experience_serial' => $newexp,
                         'education_doc' => null,
-                        'experience_doc' => $workDoc,
+                        'experience_doc' => $filePath,
                         'upload_photo' => null,
                         'upload_sign' => null,
                         'application_id' => $newApplicationId,
@@ -152,28 +131,30 @@ class FormController extends Controller
             }
         }
 
-        // Process Profile Photo
-        if ($request->hasFile('upload_photo')) {
-            $photoBase64 = base64_encode(file_get_contents($request->file('upload_photo')));
 
-            // Store only one row for the photo
+        if ($request->hasFile('upload_photo')) {
+            $file = $request->file('upload_photo');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('attached_documents', $filename, 'public');
+
             Mst_documents::create([
                 'login_id' => $loginId,
                 'education_serial' => null,
                 'experience_serial' => null,
                 'education_doc' => null,
                 'experience_doc' => null,
-                'upload_photo' => $photoBase64,
+                'upload_photo' => $filePath,
                 'upload_sign' => null,
                 'application_id' => $newApplicationId,
             ]);
         }
 
-        // Process Signature
-        if ($request->hasFile('upload_sign')) {
-            $signBase64 = base64_encode(file_get_contents($request->file('upload_sign')));
 
-            // Store only one row for the signature
+        if ($request->hasFile('upload_sign')) {
+            $file = $request->file('upload_sign');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('attached_documents', $filename, 'public');
+
             Mst_documents::create([
                 'login_id' => $loginId,
                 'education_serial' => null,
@@ -181,15 +162,13 @@ class FormController extends Controller
                 'education_doc' => null,
                 'experience_doc' => null,
                 'upload_photo' => null,
-                'upload_sign' => $signBase64,
+                'upload_sign' => $filePath,
                 'application_id' => $newApplicationId,
-                'dummy'=> '0'
+                'dummy' => '0',
             ]);
         }
 
-
-
-
+        // Process Payment
         if ($action === 'payment') {
             $transactionId = 'TXN' . rand(100000, 999999);
 
@@ -198,6 +177,7 @@ class FormController extends Controller
                 'application_id' => $newApplicationId,
                 'transaction_id' => $transactionId,
                 'payment_status' => 'success',
+                'amount' => $request->amount,
                 'form_name' => $form->form_name,
                 'license_name' => $form->license_name,
             ]);
@@ -211,6 +191,8 @@ class FormController extends Controller
                 'license_name' => $form->license_name,
             ]);
 
+            
+
             return response()->json([
                 'message' => 'Payment Processed!',
                 'login_id' => $newApplicationId
@@ -221,9 +203,5 @@ class FormController extends Controller
             'message' => 'Form saved successfully!',
             'login_id' => $newApplicationId
         ]);
-
-
-
-        // return redirect()->back()->with('success', 'Form saved as draft!');
     }
 }

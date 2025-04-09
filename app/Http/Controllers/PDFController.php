@@ -72,25 +72,22 @@ class PDFController extends Controller
                 <td width="30%" rowspan="5" style="text-align: center; vertical-align: middle;">
     ';
 
-        // Applicant Photo (if exists)
-        if (!empty($documents->upload_photo)) {
-            $base64_photo = $documents->upload_photo;
-            $image_type = 'png'; // Default image type
+        $photoDocument = Mst_documents::where('application_id', $newApplicationId)
+            ->whereNotNull('upload_photo')
 
-            if (preg_match('/^data:image\/(\w+);base64,/', $base64_photo, $matches)) {
-                $image_type = $matches[1];
-                $base64_photo = substr($base64_photo, strpos($base64_photo, ',') + 1);
-            }
+            ->first();
 
-            $photo_data = base64_decode($base64_photo);
-            $photo_path = storage_path('app/public/photo.' . $image_type);
-            file_put_contents($photo_path, $photo_data);
+        if ($photoDocument) {
+            $photoPath = public_path('storage/' . $photoDocument->upload_photo); // Absolute path for mPDF
 
-            if (file_exists($photo_path)) {
-                // Append image to $html
-                $html .= '<img src="' . $photo_path . '" width="150" height="150" >';
+            if (file_exists($photoPath)) {
+                $html .= '<img src="' . $photoPath . '" height="150" alt="Profile Photo">';
+            } else {
+                $html .= '<p>Photo not found</p>';
             }
         }
+
+
 
         $html .= '
                 </td>
@@ -186,12 +183,14 @@ class PDFController extends Controller
                 <th>Mode of Payment</th>
                 <th>Payment Date</th>
                 <th>Transaction ID</th>
+                <th>Amount</th>
             </tr>
             <tr>
                 <td>State Bank of India</td>
                 <td>UPI</td>
                 <td>25-02-2025</td>
                 <td>' . ($payment->transaction_id ?? 'N/A') . '</td>
+                <td>' . ($payment->amount ?? 'N/A') . '</td>
             </tr>
         </table>
         ';
@@ -550,25 +549,18 @@ class PDFController extends Controller
 ';
 
 
-        if (!empty($documents->upload_photo)) {
-            $base64_photo = $documents->upload_photo;
-            $image_type = 'png'; // Default type
+        $photoDocument = Mst_documents::where('application_id', $newApplicationId)
+            ->whereNotNull('upload_photo')
 
-            // Extract image type if it's encoded with data URI
-            if (preg_match('/^data:image\/(\w+);base64,/', $base64_photo, $matches)) {
-                $image_type = $matches[1]; // Get image extension
-                $base64_photo = substr($base64_photo, strpos($base64_photo, ',') + 1);
-            }
+            ->first();
 
-            // Decode and store temporarily
-            $photo_data = base64_decode($base64_photo);
-            $photo_path = storage_path("app/public/photo.$image_type");
-            file_put_contents($photo_path, $photo_data);
+        if ($photoDocument) {
+            $photoPath = public_path('storage/' . $photoDocument->upload_photo); // Absolute path for mPDF
 
-            // Ensure the file exists before including it in HTML
-            if (file_exists($photo_path)) {
-                // Convert path for PDF (mPDF requires local file access)
-                $html .= '<img src="' . $photo_path . '" width="150" height="150" />';
+            if (file_exists($photoPath)) {
+                $html .= '<img src="' . $photoPath . '"  height="150" alt="Profile Photo">';
+            } else {
+                $html .= '<p>Photo not found</p>';
             }
         }
 

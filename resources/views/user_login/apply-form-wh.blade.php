@@ -1,24 +1,4 @@
 @include('include.header')
-
-<!-- <section class="page-title" style="background-image: url(assets/images/slider/slider3.jpg);">
-    <div class="auto-container">
-        <div class="content-box">
-            <div class="content-wrapper">
-                <div class="title">
-                    <h1 class="text-uppercase">Register</h1>
-                </div>
-                <ul class="bread-crumb">
-                    <li><a href="index.php">Home</a></li>
-                    <li>Register </li>
-
-                </ul>
-            </div>
-        </div>
-    </div>
-</section> -->
-
-<!-- About section -->
-
 <style>
     hr {
         margin-top: 2px;
@@ -30,27 +10,6 @@
     .form-group {
         margin-bottom: 0px;
     }
-
-    #success {
-        background: green;
-    }
-
-    #error {
-        background: red;
-    }
-
-    #warning {
-        background: coral;
-    }
-
-    #info {
-        background: cornflowerblue;
-    }
-
-    #question {
-        background: grey;
-    }
-
     .swal2-popup.swal2-modal.swal2-show {
         width: 100%;
     }
@@ -75,7 +34,7 @@
     <div class="container">
         <ul id="breadcrumb">
             <li><a href="{{ route('dashboard')}}"><span class="fa fa-home"> </span> Dashboard</a></li>
-            <li><a href="#"><span class=" fa fa-info-circle"> </span> Form S</a></li>
+            <li><a href="#"><span class=" fa fa-info-circle"> </span> Form WH</a></li>
 
         </ul>
     </div>
@@ -86,18 +45,17 @@
             <div class="row">
                 <div class="col-lg-12 col-12">
                     <div class="apply-card apply-card-info" data-select2-id="14">
-                        <div class="apply-card-header" style="background-color: #70c6ef  !important;">
+                        <div class="apply-card-header" style="background-color:#70c6ef !important;">
                             <div class="row">
                                 <div class="col-6 col-lg-8">
-                                    <h5 class="card-title_apply text-black text-left"> New Registration Form <span style="font-weight: 600;">[ Form S - License 'C' ] </span></h5>
+                                    <h5 class="card-title_apply text-black text-left"> New Registration Form <span style="font-weight: 600;">[ Form WH - License 'WH' ] </span></h5>
                                 </div>
 
                                 <div class="col-6 col-lg-4 text-md-right">
-                                    <a href="{{url('assets/pdf/form_s_notes.pdf')}}" class="text-dark" target="_blank"><i class="fa fa-file-pdf-o" style="color: red;"></i>  Important Notes</a>
+                                    <a href="{{url('assets/pdf/form_w_notes.pdf')}}" class="text-dark" target="_blank"><i class="fa fa-file-pdf-o" style="color: red;"></i>&nbsp; Important Notes</a>
                                 </div>
 
                             </div>
-
                         </div>
                         <div class="apply-card-body">
 
@@ -131,9 +89,7 @@
                                                         </div>
 
                                                         <div class="col-12 col-md-8 pd-left-40">
-                                                            <input autocomplete="off" class="form-control text-box single-line" id="Fathers_Name" name="Fathers_Name"
-                                                                type="text" value="{{ isset($application) ? $application->fathers_name : '' }}">
-
+                                                            <input autocomplete="off" class="form-control text-box single-line" id="Fathers_Name" name="Fathers_Name" type="text" value="{{ isset($application) ? $application->fathers_name : '' }}">
                                                             <span class="error-message text-danger"></span>
                                                         </div>
                                                     </div>
@@ -161,21 +117,22 @@
                                                     <div class="row">
                                                         <div class="col-12 col-lg-7">
                                                             <div class="row align-items-center">
-                                                                <div class="col-12 col-md-6">
-                                                                    <label for="Name">4. (i) D.O.B <span style="color: red;">*</span></label><br>
-                                                                    <label for="tamil" class="tamil">பிறந்த நாள், மாதம், வருடம்</label>
+                                                                <div class="col-12 col-md-6 ">
+                                                                    <label for="Name">4. (i) D.O.B <span style="color: red;">*</span></label>
+                                                                    <br>
+                                                                    <label for="tamil" class="tamil">பிறந்த நாள்,மாதம், வருடம்</label>
                                                                 </div>
                                                                 <div class="col-12 col-md-6">
-                                                                    <input autocomplete="off" class="form-control text-box single-line" id="d_o_b" name="d_o_b" type="date" placeholder="DD/MM/YYYY" value="{{ isset($application) ? $application->d_o_b : '' }}" >
-                                                                    <!-- <span id="dobError" class="text-danger d-block mt-1" style="display: none;">Age must be 50 years or below.</span> -->
+                                                                    <input autocomplete="off" class="form-control text-box single-line" id="d_o_b" name="d_o_b" type="date" placeholder="DD/MM/YY Age" value="{{ isset($application) ? $application->d_o_b : '' }}">
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         <div class="col-12 col-lg-5">
                                                             <div class="row align-items-center">
-                                                                <div class="col-12 col-md-5">
-                                                                    <label for="Name">4. (ii) Age <span style="color: red;">*</span></label><br>
+                                                                <div class="col-12 col-md-5 ">
+                                                                    <label for="Name">4. (ii) Age <span style="color: red;">*</span></label>
+                                                                    <br>
                                                                     <label for="tamil" class="tamil"> வயது</label>
                                                                 </div>
                                                                 <div class="col-12 col-md-7">
@@ -243,7 +200,6 @@
                                                             </td>
                                                             <td>
                                                             <input type="number" step="0.1" class="form-control percentage-input" name="percentage[]" min="1" max="99" required>
-                                                            <span class="error text-danger percentage-error"></span>
                                                             </td>
                                                             <td><input type="file" class="form-control" name="education_document[]"></td>
                                                             <td>
@@ -288,7 +244,7 @@
                         .join('')}
                 </select>
             </td>
-            <td><input type="text" class="form-control" name="percentage[]" required></td>
+         <input type="number" step="0.1" class="form-control percentage-input" name="percentage[]" min="1" max="99" required>
             <td><input type="file" class="form-control" name="education_document[]"></td>
             <td>
                 <button type="button" class="btn btn-danger remove-education">
@@ -446,18 +402,18 @@
                                                 <div class="row offset-md-3" id="previously_details" style="display: none;">
                                                     <div class="col-12 col-md-2 text-md-right">
                                                         <label> License Number </label>
-                                                    </div>
-                                                    <div class="col-12 col-md-3">
-                                                        <input autocomplete="off" class="form-control" id="previously_number" name="previously_number" type="text" placeholder="License Number">
-                                                        <span id="licenseError" class="text-danger d-block mt-1"></span>
-                                                    </div>
 
-                                                    <div class="col-12 col-md-1 text-md-right">
-                                                        <label> Date </label>
                                                     </div>
                                                     <div class="col-12 col-md-3">
-                                                        <input autocomplete="off" class="form-control" id="previously_date" name="previously_date" type="date">
-                                                        <span id="dateError" class="text-danger d-block mt-1"></span>
+
+                                                        <input autocomplete="off" class="form-control text-box single-line" id="previously_number" name="previously_number" type="text" placeholder="License Number" value="">
+                                                    </div>
+                                                    <div class="col-12 col-md-1 text-md-right">
+                                                        <label> Validity </label>
+
+                                                    </div>
+                                                    <div class="col-12 col-md-3">
+                                                        <input autocomplete="off" class="form-control text-box single-line" id="previously_date" name="previously_date" type="date" value="">
                                                     </div>
                                                 </div>
                                             </div>
@@ -466,7 +422,7 @@
                                         </div>
                                         <hr>
 
-                                        <div class="row align-items-center">
+                                        <div class="row align-items-center" style="display: none;">
                                             <div class="col-12 col-md-12 ">
                                                 <div class="row align-items-center">
                                                     <div class="col-12 col-md-9 ">
@@ -515,7 +471,7 @@
 
                                         </div>
 
-                                        <hr>
+                                        <!-- <hr> -->
                                         <div class="row align-items-center head_label mt-2">
                                             <div class="col-12 col-md-12 ">
                                                 <label>9. Upload Documents </label>
@@ -568,14 +524,11 @@
 
                                             <label class="container">
                                                 <div class="declaration-container">
-                                                <input type="checkbox" id="declarationCheckbox" required {{ isset($application) ? 'checked' : '' }}>
+                                                    <input type="checkbox" id="declarationCheckbox" required {{ isset($application) ? 'checked' : '' }}>
 
                                                     <span class="checkmark"></span>
-                                                    <div>
-                                                        I hereby declare that all the details mentioned above are correct and true to the best of my knowledge. I request you to issue me the qualification certificate.<br>
-                                                        <span class="tamil">என் அறிவுக்கு எட்டியவரை மேலே குறிப்பிட்டுள்ள விவரங்கள் யாவும் சரியானவை எனவும் உண்மையானவை எனவும் உறுதி கூறுகிறேன். தகுதி சான்றிதழ் எனக்கு வழங்குமாறு வேண்டுகிறேன்.</span>
-                                                    </div>
-
+                                                    I hereby declare that all the details mentioned above are correct and true to the best of my knowledge. I request you to issue me the qualification certificate.<br>
+                                                    என் அறிவுக்கு எட்டியவரை மேலே குறிப்பிட்டுள்ள விவரங்கள் யாவும் சரியானவை எனவும் உண்மையானவை எனவும் உறுதி கூறுகிறேன். தகுதி சான்றிதழ் எனக்கு வழங்குமாறு வேண்டுகிறேன்.
                                                 </div>
                                                 <p id="checkboxError" style="color: red; display: none;">Please check the declaration box before proceeding.</p>
                                             </label>
@@ -588,10 +541,10 @@
 
 
                                     </div>
-                                    <input type="hidden" id="form_name" name="form_name" value="S">
-                                    <input type="hidden" id="license_name" name="license_name" value="C">
-                                    <input type="hidden" id="form_id" name="form_id" value="1">
-                                    <input type="hidden" id="amount" name="amount" value="750">
+                                    <input type="hidden" id="form_name" name="form_name" value="WH">
+                                    <input type="hidden" id="license_name" name="license_name" value="WH">
+                                    <input type="hidden" id="amount" name="amount" value="250">
+                                    <input type="hidden" id="form_id" name="form_id" value="3">
                                     @csrf
                                     <input type="hidden" id="form_action" name="form_action" value="draft">
 
@@ -606,6 +559,7 @@
                                     <div class="offset-md-5 col-12 col-md-6">
                                         <div class="form-group">
                                             @if(! isset($application))
+
                                             <button type="button" class="btn btn-primary btn-social" id="saveDraftBtn">
                                                 Save As Draft
                                             </button>
@@ -623,8 +577,8 @@
             </div>
         </div>
     </div>
-</section>
-
+</section><!-- Popup Modal -->
+<!-- Modal Popup -->
 <div id="draftModal" class="overlay-bg" style="display: none;">
     <div class="otp-modal">
         <h5>Your Application Details Saved Successfully</h5>
@@ -636,7 +590,7 @@
 
 
 <!-- JavaScript -->
-<!-- <script>
+<script>
     document.getElementById('saveDraftBtn').addEventListener('click', function() {
         document.getElementById('draftModal').style.display = 'flex';
     });
@@ -644,12 +598,12 @@
     function closeDraftModal() {
         document.getElementById('draftModal').style.display = 'none';
     }
-</script> -->
+</script>
 
 
 <div class="apply-card1 register" style="display: none;">
     <h2>Register</h2>
-    <form method="post" id="contact-form">
+    <form method="post" action="https://html.tonatheme.com/2021/Governlia/inc/sendemail.php" id="contact-form">
         <div class="row">
 
             <div class="form-group col-md-12">
@@ -721,12 +675,23 @@
         <button type="submit">Submit</button>
     </form>
 </div>
-
-
-
-
-
-</div>
-
 <footer class="main-footer">
     @include('include.footer')
+
+    <script>
+        // Function to show the draft saved popup
+        function showDraftPopup() {
+            document.getElementById('draftPopup').style.display = 'flex';
+        }
+
+        // Function to close the popup
+        function closeDraftPopup() {
+            document.getElementById('draftPopup').style.display = 'none';
+        }
+
+        // Attach event listener to the "Save As Draft" button
+        document.querySelector('.btn-primary').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent form submission
+            showDraftPopup(); // Show the popup
+        });
+    </script>

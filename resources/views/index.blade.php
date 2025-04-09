@@ -132,7 +132,7 @@
                     <div class="image"><img src="../CMS_MGMT_portal/uploads/about/about_image_1737541294.jpg" alt=""></div>
                     <div class="content">
                         <h4>Secretary</h4>
-                        <div class="designation">Electrical Licensing Board,
+                        <div class="designation">Electrical LICENSE Board,
                             Thiru.Vi.Ka.Indl.Estate,
                             Guindy. Chennai – 600 032</div>
                     </div>
@@ -185,116 +185,120 @@
 
 <hr>
 
-<!-- back_bg -->
-<section class="services-section " style="background: #fbfbfb;">
+
+<section class="services-section" style="background: #fbfbfb;">
     <div class="auto-container">
-        <div class="sec-title text-center">
-            <!-- <div class="big-title">TNELB</div> -->
 
-            <h2 style="color: #035ab3;">Forms</h2>
-        </div>
+
         <div class="row">
-
-
-            <div class="col-lg-4 col-md-6 service-block">
-                <div class="inner-box">
-                    <div class="icon"><i class="icon-election"></i></div>
-                    <div class="content">
-                        <h4>Form WH</h4>
-                        <div class="text">Government of Tamilnadu THE ELECTRICAL LICENSING BOARD FORM `WH'</div>
-                        <div class="link-btn"><a href="/login"><i class="icon-arrow"></i><button class=" btn btn-primary">Apply Now</button></a></div>
+            <div class="col-lg-6">
+                <div class="sec-title text-center">
+                    <h2 style="color: #035ab3;">Competency Certificate</h2>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 service-block">
+                        <div class="inner-box">
+                            <div class="icon"><i class="icon-election"></i></div>
+                            <div class="content">
+                                <h4>Form H</h4>
+                                <div class="text">LICENSE `WH'</div>
+                                <div class="link-btn"><a href="{{ route('login') }}"><button class="btn btn-primary">Apply Now</button></a></div>
+                            </div>
+                        </div>
                     </div>
+                    <div class="col-md-6 service-block">
+                        <div class="inner-box">
+                            <div class="icon"><i class="icon-election"></i></div>
+                            <div class="content">
+                                <h4>Form W</h4>
+                                <div class="text">LICENSE  `A'</div>
+                                <div class="link-btn"><a href="{{ route('login') }}"><button class="btn btn-primary">Apply Now</button></a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 service-block">
+                        <div class="inner-box">
+                            <div class="icon"><i class="icon-election"></i></div>
+                            <div class="content">
+                                <h4>Form S</h4>
+                                <div class="text">LICENSE  `C'</div>
+                                <div class="link-btn"><a href="{{ route('login') }}"><button class="btn btn-primary">Apply Now</button></a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 service-block">
+                        <div class="inner-box">
+                            <div class="icon"><i class="icon-election"></i></div>
+                            <div class="content">
+                                <h4>Form PG</h4>
+                                <div class="text">LICENSE  `P'</div>
+                                <div class="link-btn"><a href="{{ route('login') }}"><button class="btn btn-primary">Apply Now</button></a></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-md-6 service-block">
+                        <div class="inner-box">
+                            <div class="icon"><i class="icon-election"></i></div>
+                            <div class="content">
+                                <h4>Form H TO B</h4>
+                                <div class="text">LICENSE  `H TO B'</div>
+                                <div class="link-btn"><a href="{{ route('login') }}"><button class="btn btn-primary">Apply Now</button></a></div>
+                            </div>
+                        </div>
+                    </div> -->
+
                 </div>
             </div>
+            <div class="col-lg-6">
+            <div class="sec-title text-center">
+                    <h2 style="color: #035ab3;">Contractor Licenses</h2>
+                </div>
+                <div class="row">
 
-            <div class="col-lg-4 col-md-6 service-block">
-                <div class="inner-box">
-                    <div class="icon"><i class="icon-election"></i></div>
-                    <div class="content">
-                        <h4>Form W</h4>
-                        <div class="text">Government of Tamilnadu THE ELECTRICAL LICENSING BOARD FORM `W'</div>
-                        <div class="link-btn"><a href="/login"><i class="icon-arrow"></i><button class=" btn btn-primary">Apply Now</button></a></div>
+                    <div class="col-md-6 service-block">
+                        <div class="inner-box">
+                            <div class="icon1"><i class="icon-election"></i></div>
+                            <div class="content">
+                                <h4>Form EB</h4>
+                                <div class="text">LICENSE  `EB'</div>
+                                <div class="link-btn"><a href="{{ route('login') }}"><button class="btn btn-primary" style="background:#5b5d60;">Apply Now</button></a></div>
+                            </div>
+                        </div>
                     </div>
+                    <div class="col-md-6 service-block">
+                        <div class="inner-box">
+                            <div class="icon1"><i class="icon-election"></i></div>
+                            <div class="content">
+                                <h4>Form ESB</h4>
+                                <div class="text">LICENSE  `SB'</div>
+                                <div class="link-btn"><a href="{{ route('login') }}"><button class="btn btn-primary" style="background:#5b5d60;">Apply Now</button></a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 service-block">
+                        <div class="inner-box">
+                            <div class="icon1"><i class="icon-election"></i></div>
+                            <div class="content">
+                                <h4>Form EA</h4>
+                                <div class="text">LICENSE  `A'</div>
+                                <div class="link-btn"><a href="{{ route('login') }}"><button class="btn btn-primary" style="background:#5b5d60;">Apply Now</button></a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 service-block">
+                        <div class="inner-box">
+                            <div class="icon1"><i class="icon-election"></i></div>
+                            <div class="content">
+                                <h4>Form ESA</h4>
+                                <div class="text">LICENSE  `SA'</div>
+                                <div class="link-btn"><a href="{{ route('login') }}"><button class="btn btn-primary" style="background:#5b5d60;">Apply Now</button></a></div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
-            <div class="col-lg-4 col-md-6 service-block">
-                <div class="inner-box">
-                    <div class="icon"><i class="icon-election"></i></div>
-                    <div class="content">
-                        <h4>Form S</h4>
-                        <div class="text">Government of Tamilnadu THE ELECTRICAL LICENSING BOARD FORM `S'</div>
-                        <div class="link-btn"><a href="/login"><i class="icon-arrow"></i><button class=" btn btn-primary">Apply Now</button></a></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 service-block">
-                <div class="inner-box">
-                    <div class="icon"><i class="icon-election"></i></div>
-                    <div class="content">
-                        <h4>Form P</h4>
-                        <div class="text">Government of Tamilnadu THE ELECTRICAL LICENSING BOARD FORM `P'</div>
-                        <div class="link-btn"><a href="/login"><i class="icon-arrow"></i><button class=" btn btn-primary">Apply Now</button></a></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 service-block">
-                <div class="inner-box">
-                    <div class="icon"><i class="icon-election"></i></div>
-                    <div class="content">
-                        <h4>Form H TO B</h4>
-                        <div class="text">Government of Tamilnadu THE ELECTRICAL LICENSING BOARD FORM ` H TO B'</div>
-                        <div class="link-btn"><a href="/login"><i class="icon-arrow"></i><button class=" btn btn-primary">Apply Now</button></a></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 service-block">
-                <div class="inner-box">
-                    <div class="icon"><i class="icon-election"></i></div>
-                    <div class="content">
-                        <h4>Form EB</h4>
-                        <div class="text">Government of Tamilnadu THE ELECTRICAL LICENSING BOARD FORM `EB'</div>
-                        <div class="link-btn"><a href="/login"><i class="icon-arrow"></i><button class=" btn btn-primary">Apply Now</button></a></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 service-block">
-                <div class="inner-box">
-                    <div class="icon"><i class="icon-election"></i></div>
-                    <div class="content">
-                        <h4>Form SB</h4>
-                        <div class="text">Government of Tamilnadu THE ELECTRICAL LICENSING BOARD FORM `SB'</div>
-                        <div class="link-btn"><a href="/login"><i class="icon-arrow"></i><button class=" btn btn-primary">Apply Now</button></a></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 service-block">
-                <div class="inner-box">
-                    <div class="icon"><i class="icon-election"></i></div>
-                    <div class="content">
-                        <h4>Form A</h4>
-                        <div class="text">Government of Tamilnadu THE ELECTRICAL LICENSING BOARD FORM `A'</div>
-                        <div class="link-btn"><a href="/login"><i class="icon-arrow"></i><button class=" btn btn-primary">Apply Now</button></a></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 service-block">
-                <div class="inner-box">
-                    <div class="icon"><i class="icon-election"></i></div>
-                    <div class="content">
-                        <h4>Form SA</h4>
-                        <div class="text">Government of Tamilnadu THE ELECTRICAL LICENSING BOARD FORM `SA'</div>
-                        <div class="link-btn"><a href="/login"><i class="icon-arrow"></i><button class=" btn btn-primary">Apply Now</button></a></div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </section>
@@ -315,7 +319,7 @@
                     <div class="sec-title style-two mb-20 text-center">
                         <h2 class="text-white">Services & Standards</h2>
                     </div>
-                    <div class="text text-white">We render the highest standards of service to public. This charter set out the standards for various functions of Electrical Licensing Board so as to improve our service to public. These service levels are our maximum response period and we strive to beat these standards every time we can.</div>
+                    <div class="text text-white">We render the highest standards of service to public. This charter set out the standards for various functions of Electrical LICENSE Board so as to improve our service to public. These service levels are our maximum response period and we strive to beat these standards every time we can.</div>
                     <div class="row">
                         <!-- <div class="col-md-2 col-lg-2"></div> -->
                         <div class="col-md-12 col-lg-12">

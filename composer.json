@@ -12,9 +12,8 @@
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
-        "mews/captcha": "^3.4",
+        "mews/captcha": "*",
         "mpdf/mpdf": "^8.2",
-        "sayakb/captcha": "dev-master",
         "setasign/fpdf": "^1.8",
         "stichoza/google-translate-php": "^5.2",
         "tecnickcom/tcpdf": "^6.8"

@@ -163,7 +163,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Sayakb\Captcha\CaptchaServiceProvider::class,
+        // Sayakb\Captcha\CaptchaServiceProvider::class,
 
         /*
          * Package Service Providers...

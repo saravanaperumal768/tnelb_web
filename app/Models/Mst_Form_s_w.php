@@ -23,6 +23,12 @@ class Mst_Form_s_w extends Model
         'status',
         'wireman_details',
         'form_name',
-        'license_name'
+        'form_id',
+        'license_name',
+        // 'application_status',
+        // 'license_number',
+        'payment_status'
+
+  
     ];
 }

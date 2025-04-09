@@ -123,9 +123,9 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <!-- <div class="d-none d-sm-block col-md-6 col-12">
-                                    <span class="text-primary"><strong>Enter Details</strong></span>
-                                </div> -->
+                                <div class="d-none d-sm-block col-md-12 col-12 text-md-right">
+                                    <span class="text-primary"><strong><span style="color: red;">*</span> Fields are must to be Filled</strong></span>
+                                </div>
 
                             </div>
                             <div class="row">
@@ -134,13 +134,13 @@
                                 </div>
                             </div>
                             <!-- autocomplete="off" -->
-                            <form id="form1">
+                            <form id="form1" autocomplete="off">
                                 @csrf
                                 <div class="row">
 
                                     <div class="col-12 col-md-6">
                                         <div class="row">
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-5">
                                                 <div class="form-group">
                                                     <label class="col-12 col-md-12 " for="Name">Name <span style="color: red;">*</span></label>
 
@@ -148,39 +148,40 @@
                                             </div>
                                             <div class="col-12 col-md-7">
                                                 <input type="text" id="Name" name="Name" class="form-control">
-
+                                                <span id="NameError" class="text-danger"></span>
                                             </div>
                                         </div>
 
                                         <div class="row pt-4">
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-5">
                                                 <div class="form-group">
                                                     <label class="col-12 col-md-12 " for="Name">Gender <span style="color: red;">*</span></label>
 
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-md-8">
+                                            <div class="col-12 col-md-7">
                                                 <div class="row">
                                                     <div class="col-md-3">
                                                         <input type="radio" name="gender" value="Male">
                                                         <label for="Male">Male</label>
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        <input name="gender" type="radio" value="Female">
+                                                    <div class="col-md-4">
+                                                        <input type="radio" name="gender" value="Female">
                                                         <label for="Female">Female</label>
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <input name="gender" type="radio" value="Transgender">
+                                                    <div class="col-md-5">
+                                                        <input type="radio" name="gender" value="Transgender">
                                                         <label for="Transgender">Transgender</label>
                                                     </div>
                                                 </div>
+                                                <span id="GenderError" class="text-danger"></span>
 
                                             </div>
                                         </div>
 
 
                                         <div class="row pt-3">
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-5">
                                                 <div class="form-group">
                                                     <label class="col-12 col-md-12" for="PhoneNo">Mobile number <span style="color: red;">*</span></label>
                                                 </div>
@@ -193,7 +194,7 @@
 
 
                                         <div class="row pt-4">
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-5">
                                                 <div class="form-group">
                                                     <label class="col-12 col-md-12" for="PhoneNo">E-mail address </label>
 
@@ -205,6 +206,38 @@
 
                                             </div>
                                         </div>
+
+
+                                        <div class="row pt-4">
+                                            <div class="col-12 col-md-5">
+                                                <div class="form-group">
+                                                    <label class="col-12 col-md-12" for="aadhaar">Aadhaar Card Number <span style="color: red;">*</span> </label>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-7">
+                                                <input type="text" id="aadhaar" name="aadhaar" class="form-control">
+                                                <span id="aadhaarError" class="text-danger"></span>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-4">
+                                            <div class="col-12 col-md-5">
+                                                <div class="form-group">
+                                                    <label class="col-12 col-md-12" for="aadhaar">Pan Card Number <span style="color: red;">*</span> </label>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-7">
+                                                <input type="text" id="pancard" name="pancard" class="form-control">
+                                                <span id="pancardError" class="text-danger"></span>
+
+                                            </div>
+                                        </div>
+
+
+
 
                                     </div>
 
@@ -220,6 +253,8 @@
                                             <div class="col-12 col-md-8">
 
                                                 <textarea rows='3' id="Address" name="Address" class="form-control"></textarea>
+                                                <span id="AddressError" class="text-danger"></span>
+
                                             </div>
                                         </div>
 
@@ -273,6 +308,7 @@
                                                     <option value="Jammu and Kashmir">Jammu and Kashmir</option>
                                                     <option value="Ladakh">Ladakh</option>
                                                 </select>
+                                                <span id="StateError" class="text-danger"></span>
 
                                             </div>
                                         </div>
@@ -321,7 +357,7 @@
                                                     <option value="Viluppuram">Viluppuram</option>
                                                     <option value="Virudhunagar">Virudhunagar</option>
                                                 </select>
-
+                                                <span id="DistrictError" class="text-danger"></span>
                                             </div>
                                         </div>
 
@@ -334,7 +370,7 @@
                                             </div>
                                             <div class="col-12 col-md-8">
                                                 <input type="text" id="pincode" name="pincode" class="form-control">
-
+                                                <span id="PincodeError" class="text-danger"></span>
                                             </div>
                                         </div>
 
@@ -375,8 +411,8 @@
 
                             <div id="success-popup" class="popup">
                                 <h2>Registration Successful!</h2>
-                                <p>Your registration was completed successfully. You can now log in.</p>
-                                <h5>Your Login ID will be your Mobile Number</h5>
+                                <!-- <p>Your registration was completed successfully. You can now log in.</p> -->
+                                <h6 class="mt-2">Your Login ID will be your Mobile Number</h6>
                                 <a href="{{ route('login') }} " class="btn btn-primary log_in mt-2">OK</a>
                             </div>
                             <div id="overlay" class="overlay"></div>
@@ -473,5 +509,11 @@
         <button id="loginBtn">Login</button>
     </div>
 </div>
+
+
 <footer class="main-footer">
+
+
+    
+
     @include('include.footer')
